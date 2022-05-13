@@ -2,7 +2,7 @@ import { FunctionalComponent, h } from "preact";
 import { useState } from "preact/hooks";
 import style from "./style.css";
 
-import Shape from "src/components/shape";
+import Game from "src/components/shape";
 
 const Home: FunctionalComponent = () => {
   const [area, setArea] = useState<number>(0);
@@ -12,7 +12,7 @@ const Home: FunctionalComponent = () => {
       <h1>Home</h1>
       <p>This is the Home component. {area}</p>
 
-      <Shape setArea={setArea} />
+      <Game />
     </div>
   );
 };
