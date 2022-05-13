@@ -7,21 +7,55 @@ type Props = {
 };
 
 interface IShape {
-  draw: (ctx: any) => void;
+  x: number;
+  y: number;
+  draw: (ctx: CanvasRenderingContext2D) => void;
   getArea: () => number;
 }
 
-class Circle implements IShape {
-  constructor() {
+interface IShapeGroup extends IShape {
+  shapes: IShape[]
+}
 
+class Circle implements IShape {
+  x: number;
+  y: number;
+  r: number;
+
+  constructor(x: number, y: number, r: number) {
+    this.x = x; this.y = y;
+    this.r = 20;
   }
 
-  draw(ctx: any) {
-
+  draw(ctx: CanvasRenderingContext2D) {
+    ctx.beginPath();
+    ctx.arc(50, 100, this.r, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.closePath();
   }
 
   getArea() {
-    return 0;
+    return 2 * Math.PI * this.r;
+  }
+}
+
+class Rectangle implements IShape {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+
+  constructor(x: number, y: number, w: number, h: number) {
+    this.x = x; this.y = y;
+    this.w = w; this.h = h;
+  }
+
+  draw(ctx: CanvasRenderingContext2D) {
+    ctx.fillRect(this.x, this.y, this.w, this.h);
+  }
+
+  getArea() {
+    return this.w * this.h;
   }
 }
 
