@@ -1,5 +1,5 @@
 import { FunctionalComponent, h } from "preact";
-import { useRef, useEffect } from "preact/hooks";
+import { useRef, useEffect, useState } from "preact/hooks";
 import style from "./style.css";
 
 
@@ -121,22 +121,26 @@ const Game: FunctionalComponent<Props> = (props) => {
   }, []);
 
   const draw = (s: number = 1) => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (!ctx) return null
+    ctx.fillStyle = "white";
 
-    const context = canvas.getContext("2d");
-    if (!context) return;
+    //@ts-ignore
+    ctx.fillRect(0, 0, canvasRef.current.width, canvasRef.current.height);
 
-
-    circle.draw(context);
+    ctx.fillStyle = "black";
+    circle.draw(ctx);
     console.log(circle.getArea());
 
   }
 
   const handleInput = (e: any) => {
     console.log(e.target.valueAsNumber);
+    if (!ctx) return null
 
+    //ctx.scale(e.target.valueAsNumber / 50, e.target.valueAsNumber / 50);
+    circle.r = (e.target.valueAsNumber / 50.0) * 20;
     draw();
+    //ctx.setTransform(1, 0, 0, 1, 0, 0);
   }
 
   return (
