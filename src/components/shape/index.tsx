@@ -1,14 +1,12 @@
 import { FunctionalComponent, h } from "preact";
-import { useRef, useEffect } from "preact/hooks";
+import { useRef, useEffect, useState } from "preact/hooks";
 import style from "./style.css";
 
-type Props = {
-  setArea: (a: number) => void
-};
 
 interface IShape {
   x: number;
   y: number;
+
   draw: (ctx: CanvasRenderingContext2D) => void;
   getArea: () => number;
 }
@@ -59,8 +57,20 @@ class Rectangle implements IShape {
   }
 }
 
-const Shape: FunctionalComponent<Props> = (props) => {
+type Props = {
+  matchArea: number;
+  setArea: (a: number) => void;
+};
+
+const Shape: FunctionalComponent<Props> = (props: Props) => {
+  const {
+    matchArea,
+    setArea
+  } = props;
+
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>(null);
+  const [shape, setShape] = useState<IShape | null>(null);
 
   useEffect(() => {
     console.log("HERE");
@@ -72,16 +82,24 @@ const Shape: FunctionalComponent<Props> = (props) => {
     const context = canvas.getContext("2d");
     if (!context) return;
 
-
-    context.fillStyle = "#000000";
-    context.beginPath();
-    context.arc(50, 100, 20, 0, 2 * Math.PI);
-    context.fill();
+    setCtx(context);
   }, []);
+
+  const draw = () => {
+    shape.draw(ctx);
+  }
+
+  const handleSliderChange = (e: any) => {
+    let val = e.target.valueAsNumber;
+    shape.scale(val / 50);
+
+    setArea(shape.getArea());
+  }
 
   return (
     <div>
       <canvas ref={canvasRef} />
+      <input onChange={handleSliderChange} />
     </div>
   )
 }
