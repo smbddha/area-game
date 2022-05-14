@@ -13,6 +13,26 @@ interface IShape {
 
 interface IShapeGroup extends IShape {
   shapes: IShape[]
+  draw: (ctx: CanvasRenderingContext2D) => void;
+  getArea: () => number;
+}
+
+class ShapeGroup implements IShapeGroup {
+  x: number; y: number;
+  shapes: IShape[];
+
+  constructor(x: number, y: number) {
+    this.x = x; this.y = y;
+    this.shapes = [];
+  }
+
+  draw(ctx: CanvasRenderingContext2D) {
+    this.shapes.map(s => s.draw(ctx));
+  }
+
+  getArea() {
+    return this.shapes.map(a => a.getArea()).reduce((a, b) => a + b, 0);
+  }
 }
 
 class Circle implements IShape {
@@ -56,6 +76,29 @@ class Rectangle implements IShape {
     return this.w * this.h;
   }
 }
+class Triangle implements IShape {
+  x: number;
+  y: number;
+  b: number;
+  h: number;
+
+  constructor(x: number, y: number, b: number, h: number) {
+    this.x = x; this.y = y;
+    this.b = b; this.h = h;
+  }
+
+  draw(ctx: CanvasRenderingContext2D) {
+    ctx.beginPath();
+    ctx.moveTo(this.x, this.y - (this.h / 2));
+    ctx.lineTo(this.x + (this.b / 2), this.y + (this.h / 2));
+    ctx.lineTo(this.x - (this.b / 2), this.y + (this.h / 2));
+    ctx.closePath();
+  }
+
+  getArea() {
+    return 0.5 * this.b * this.h;
+  }
+}
 
 type Props = {
   matchArea: number;
@@ -78,7 +121,6 @@ const Shape: FunctionalComponent<Props> = (props: Props) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-
     const context = canvas.getContext("2d");
     if (!context) return;
 
@@ -94,14 +136,21 @@ const Shape: FunctionalComponent<Props> = (props: Props) => {
     shape.scale(val / 50);
 
     setArea(shape.getArea());
-  }
+    draw();
+  }, []);
 
-  return (
-    <div>
-      <canvas ref={canvasRef} />
-      <input onChange={handleSliderChange} />
-    </div>
-  )
 }
 
-export default Shape;
+  }
+
+return (
+  <div>
+    <canvas ref={canvasRef} />
+    <div class="slidecontainer">
+      <input type="range" min="1" max="100" value="50" class="slider" id="myRange" onInput={handleInput} />
+    </div>
+  </div>
+)
+}
+
+export default Game;

@@ -2,7 +2,7 @@ import { FunctionalComponent, h } from "preact";
 import { useState, useEffect } from "preact/hooks";
 import style from "./style.css";
 
-import Shape from "src/components/shape";
+import Game from "src/components/shape";
 
 const Slide: FunctionalComponent = () => {
   const [area1, setArea1] = useState<number>(0);
