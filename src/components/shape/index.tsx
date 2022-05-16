@@ -1,119 +1,53 @@
 import { FunctionalComponent, h } from "preact";
 import { useRef, useEffect, useState } from "preact/hooks";
+
+import { IShape, IShapeGroup, ShapeEnum, makeShape } from "src/utils";
 import style from "./style.css";
 
-
-interface IShape {
-  x: number;
-  y: number;
-
-  draw: (ctx: CanvasRenderingContext2D) => void;
-  getArea: () => number;
-}
-
-interface IShapeGroup extends IShape {
-  shapes: IShape[]
-  draw: (ctx: CanvasRenderingContext2D) => void;
-  getArea: () => number;
-}
-
-class ShapeGroup implements IShapeGroup {
-  x: number; y: number;
-  shapes: IShape[];
-
-  constructor(x: number, y: number) {
-    this.x = x; this.y = y;
-    this.shapes = [];
-  }
-
-  draw(ctx: CanvasRenderingContext2D) {
-    this.shapes.map(s => s.draw(ctx));
-  }
-
-  getArea() {
-    return this.shapes.map(a => a.getArea()).reduce((a, b) => a + b, 0);
-  }
-}
-
-class Circle implements IShape {
-  x: number;
-  y: number;
-  r: number;
-
-  constructor(x: number, y: number, r: number) {
-    this.x = x; this.y = y;
-    this.r = 20;
-  }
-
-  draw(ctx: CanvasRenderingContext2D) {
-    ctx.beginPath();
-    ctx.arc(50, 100, this.r, 0, 2 * Math.PI);
-    ctx.fill();
-    ctx.closePath();
-  }
-
-  getArea() {
-    return 2 * Math.PI * this.r;
-  }
-}
-
-class Rectangle implements IShape {
-  x: number;
-  y: number;
-  w: number;
-  h: number;
-
-  constructor(x: number, y: number, w: number, h: number) {
-    this.x = x; this.y = y;
-    this.w = w; this.h = h;
-  }
-
-  draw(ctx: CanvasRenderingContext2D) {
-    ctx.fillRect(this.x, this.y, this.w, this.h);
-  }
-
-  getArea() {
-    return this.w * this.h;
-  }
-}
-class Triangle implements IShape {
-  x: number;
-  y: number;
-  b: number;
-  h: number;
-
-  constructor(x: number, y: number, b: number, h: number) {
-    this.x = x; this.y = y;
-    this.b = b; this.h = h;
-  }
-
-  draw(ctx: CanvasRenderingContext2D) {
-    ctx.beginPath();
-    ctx.moveTo(this.x, this.y - (this.h / 2));
-    ctx.lineTo(this.x + (this.b / 2), this.y + (this.h / 2));
-    ctx.lineTo(this.x - (this.b / 2), this.y + (this.h / 2));
-    ctx.closePath();
-  }
-
-  getArea() {
-    return 0.5 * this.b * this.h;
-  }
-}
-
 type Props = {
-  matchArea: number;
+  //matchArea: number;
+  //shape: IShape | IShapeGroup;
   setArea: (a: number) => void;
+  shapeType: ShapeEnum;
+  shapeCount: number;
+  canvasStyle: any;
 };
+
+/* const useShape = (shapeType, shapeCount) => {
+ *   const [shape, setShape] = useState<IShape | null>(null);
+ *   const [scale, setScale] = useState<number>(1.0);
+ * 
+ *   useEffect(() => {
+ *     setShape(new Circle(50, 50, 20));
+ *   });
+ * 
+ *   useEffect(() => {
+ * 
+ *   })
+ * 
+ *   const drawShape = () => shape?.draw();
+ *   const scaleShape = (s) => shape?.scale(s);
+ * 
+ *   return {
+ *     drawShape,
+ *     scaleShape
+ *   }
+ * };
+ *  */
 
 const Shape: FunctionalComponent<Props> = (props: Props) => {
   const {
-    matchArea,
-    setArea
+    //matchArea,
+    shapeType,
+    shapeCount,
+    setArea,
+    canvasStyle
   } = props;
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>(null);
-  const [shape, setShape] = useState<IShape | null>(null);
+  const [shape, setShape] = useState<IShape | IShapeGroup | null>(makeShape(shapeType, shapeCount));
+  const [scale, setScale] = useState<number>(1.0);
 
   useEffect(() => {
     console.log("HERE");
@@ -125,32 +59,53 @@ const Shape: FunctionalComponent<Props> = (props: Props) => {
     if (!context) return;
 
     setCtx(context);
-  }, []);
-
-  const draw = () => {
-    shape.draw(ctx);
-  }
-
-  const handleSliderChange = (e: any) => {
-    let val = e.target.valueAsNumber;
-    shape.scale(val / 50);
-
-    setArea(shape.getArea());
     draw();
   }, []);
 
-}
+  useEffect(() => {
+    if (!ctx) return;
 
+    draw();
+  }, [ctx])
+
+  const draw = () => {
+    if (!shape || !ctx) return;
+    ctx.fillStyle = "white";
+
+    //@ts-ignore
+    ctx.fillRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+
+    ctx.fillStyle = "black";
+
+    console.log(shape)
+
+    //@ts-ignore
+    shape.draw(ctx, canvasRef.current.width / 2, canvasRef.current.height / 2);
   }
 
-return (
-  <div>
-    <canvas ref={canvasRef} />
-    <div class="slidecontainer">
-      <input type="range" min="1" max="100" value="50" class="slider" id="myRange" onInput={handleInput} />
+  const handleInput = (e: any) => {
+    if (!shape) return;
+
+    let val = e.target.valueAsNumber;
+    let s = val / 50;
+
+    setScale(s);
+    //@ts-ignore
+    shape.scale(s);
+
+    setArea(shape.getArea());
+    draw();
+  };
+
+
+  return (
+    <div>
+      <canvas ref={canvasRef} width={canvasStyle.width} height={canvasStyle.height} />
+      <div class="slidecontainer">
+        <input type="range" min="1" max="100" value={scale * 50} class="slider" id="myRange" onInput={handleInput} />
+      </div>
     </div>
-  </div>
-)
+  )
 }
 
-export default Game;
+export default Shape;
