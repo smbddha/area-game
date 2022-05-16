@@ -40,6 +40,10 @@ const Slide: FunctionalComponent = () => {
   );
 };
 
+const style = {
+
+}
+
 const Game: FunctionalComponent = () => {
 
   const renderSlide = () => {
