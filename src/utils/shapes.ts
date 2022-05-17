@@ -4,7 +4,7 @@ export interface IShape {
     s: number;
     dims: any;
 
-    draw: (ctx: CanvasRenderingContext2D) => void;
+    draw: (ctx: CanvasRenderingContext2D, x?: number, y?: number) => void;
     getArea: () => number;
     scale: (s: number) => void;
     randomize: (range: { low: number, high: number }) => void;
@@ -12,7 +12,7 @@ export interface IShape {
 
 export interface IShapeGroup extends IShape {
     shapes: IShape[]
-    draw: (ctx: CanvasRenderingContext2D, x?: number, y?: number) => void;
+    //draw: (ctx: CanvasRenderingContext2D, x?: number, y?: number) => void;
     getArea: () => number;
 }
 
@@ -26,8 +26,8 @@ export class ShapeGroup implements IShapeGroup {
     x: number; y: number; s: number; dims: any
     shapes: IShape[];
 
-    constructor(x: number, y: number, shapes: IShape[] = []) {
-        this.x = x; this.y = y; this.s = 1.0;
+    constructor(shapes: IShape[] = []) {
+        this.x = 0; this.y = 0; this.s = 1.0;
         this.shapes = shapes;
 
         let shape_cnt = this.shapes.length;
@@ -40,7 +40,20 @@ export class ShapeGroup implements IShapeGroup {
 
     draw(ctx: CanvasRenderingContext2D, x?: number, y?: number) {
         //if (x) this.x = 
-        this.shapes.map(s => s.draw(ctx));
+        //this.shapes.map(s => s.draw(ctx, nx, ny));
+
+        console.log("HERE")
+        console.log(y || this.y)
+
+        let shapeCnt = this.shapes.length
+        let ystep = ((y || this.y) * 2) / (shapeCnt + 1);
+
+        let nx = x || this.x;
+        for (let i = 0; i < shapeCnt; i++) {
+            let ny = ystep * (i + 1);
+            this.shapes[i].draw(ctx, nx, ny)
+            console.log("DRAW")
+        }
     }
 
     getArea() {
@@ -81,7 +94,9 @@ export class Circle implements IShape {
     }
 
     getArea() {
-        return 2 * Math.PI * this.dims.r * this.s;
+        console.log("CIRCLE", this.dims.r, this.s)
+        let sr = this.dims.r * this.s
+        return Math.PI * (sr * sr);
     }
 
     scale(s: number) { this.s = s; }
@@ -121,7 +136,8 @@ export class Rectangle implements IShape {
     }
 
     getArea() {
-        return this.dims.w * this.dims.h * this.s;
+        console.log("RECT", this.dims.w, this.dims.h, this.s)
+        return (this.dims.w * this.s) * (this.dims.h * this.s);
     }
 
     scale(s: number) { this.s = s; }
@@ -174,25 +190,52 @@ export class Triangle implements IShape {
     }
 }
 
-export const makeShape = (shapeType: ShapeEnum, shapeCount: number): IShape | IShapeGroup | null => {
-    let shape = null;
-    switch (shapeType) {
-        case ShapeEnum.Circle:
-            shape = new Circle(10);
-            break;
-        case ShapeEnum.Rectangle:
-            shape = new Rectangle(10, 10);
-            break;
-        case ShapeEnum.Triangle:
-            shape = new Triangle(10, 10);
-            break;
-        default:
-            break;
+// function randomEnum<T>(anEnum: T): T[keyof T] {
+//     const enumValues = Object.values(anEnum)
+//         .map(n => +n)
+//         .filter(n => !Number.isNaN(n)) as unknown as T[keyof T][]
+//     const randomIndex = Math.floor(Math.random() * enumValues.length)
+//     const randomEnumValue = enumValues[randomIndex]
+//     return randomEnumValue;
+// }
+
+function sample<T>(arr: T[]) {
+    return arr[Math.floor(Math.random() * arr.length)];
+}
+
+export const makeShape = (shapeType: ShapeEnum, shapeCount: number): IShape | IShapeGroup => {
+    let shape: IShape | IShapeGroup = new Circle(0);
+
+    console.log("MAKING SHAPE");
+
+    if (shapeCount > 1) {
+        //@ts-ignore
+        shape = new ShapeGroup([...Array(shapeCount).keys()].map(() => {
+            let st = sample<ShapeEnum>(Object.values(ShapeEnum));
+            console.log(st)
+            let s = makeShape(st, 1);
+            if (s) s.randomize({ low: 10, high: 50 });
+            return s
+        }))
+
     }
+    else {
 
-    if (!shape) return null;
+        switch (shapeType) {
+            case ShapeEnum.Circle:
+                shape = new Circle(10);
+                break;
+            case ShapeEnum.Rectangle:
+                shape = new Rectangle(10, 10);
+                break;
+            case ShapeEnum.Triangle:
+                shape = new Triangle(10, 10);
+                break;
+            default:
+                break;
+        }
+        shape.randomize({ low: 20, high: 70 })
 
-    shape.randomize({ low: 20, high: 70 })
-
+    }
     return shape;
 }

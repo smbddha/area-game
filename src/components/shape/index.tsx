@@ -2,14 +2,13 @@ import { FunctionalComponent, h } from "preact";
 import { useRef, useEffect, useState } from "preact/hooks";
 
 import { IShape, IShapeGroup, ShapeEnum, makeShape } from "src/utils";
-import style from "./style.css";
 
 type Props = {
   //matchArea: number;
-  //shape: IShape | IShapeGroup;
+  shape: IShape | IShapeGroup;
   setArea: (a: number) => void;
-  shapeType: ShapeEnum;
-  shapeCount: number;
+  /* shapeType: ShapeEnum;
+   * shapeCount: number; */
   canvasStyle: any;
 };
 
@@ -38,20 +37,16 @@ type Props = {
 const Shape: FunctionalComponent<Props> = (props: Props) => {
   const {
     //matchArea,
-    shapeType,
-    shapeCount,
-    setArea,
+    shape,
     canvasStyle
   } = props;
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>(null);
-  const [shape, setShape] = useState<IShape | IShapeGroup | null>(makeShape(shapeType, shapeCount));
+  //const [shape, setShape] = useState<IShape | IShapeGroup | null>(makeShape(shapeType, shapeCount));
   const [scale, setScale] = useState<number>(1.0);
 
   useEffect(() => {
-    console.log("HERE");
-
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -61,6 +56,13 @@ const Shape: FunctionalComponent<Props> = (props: Props) => {
     setCtx(context);
     draw();
   }, []);
+
+  useEffect(() => {
+    if (!ctx) return;
+
+    draw();
+  }, [ctx])
+
 
   useEffect(() => {
     if (!ctx) return;
@@ -81,6 +83,7 @@ const Shape: FunctionalComponent<Props> = (props: Props) => {
 
     //@ts-ignore
     shape.draw(ctx, canvasRef.current.width / 2, canvasRef.current.height / 2);
+    //setArea(shape.getArea());
   }
 
   const handleInput = (e: any) => {
@@ -93,7 +96,6 @@ const Shape: FunctionalComponent<Props> = (props: Props) => {
     //@ts-ignore
     shape.scale(s);
 
-    setArea(shape.getArea());
     draw();
   };
 
