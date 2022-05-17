@@ -5,6 +5,7 @@ import { IShape, IShapeGroup, ShapeEnum, makeShape } from "src/utils";
 
 type Props = {
   //matchArea: number;
+  key: number;
   shape: IShape | IShapeGroup;
   setArea: (a: number) => void;
   /* shapeType: ShapeEnum;
@@ -37,6 +38,7 @@ type Props = {
 const Shape: FunctionalComponent<Props> = (props: Props) => {
   const {
     //matchArea,
+    key,
     shape,
     canvasStyle
   } = props;
@@ -47,6 +49,7 @@ const Shape: FunctionalComponent<Props> = (props: Props) => {
   const [scale, setScale] = useState<number>(1.0);
 
   useEffect(() => {
+    console.log("FIRST")
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -55,6 +58,7 @@ const Shape: FunctionalComponent<Props> = (props: Props) => {
 
     setCtx(context);
     draw();
+    console.log("end")
   }, []);
 
   useEffect(() => {
