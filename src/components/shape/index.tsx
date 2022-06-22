@@ -4,12 +4,8 @@ import { useRef, useEffect, useState } from "preact/hooks";
 import { IShape, IShapeGroup, ShapeEnum, makeShape } from "src/utils";
 
 type Props = {
-  //matchArea: number;
   key: number;
   shape: IShape | IShapeGroup;
-  setArea: (a: number) => void;
-  /* shapeType: ShapeEnum;
-   * shapeCount: number; */
   canvasStyle: any;
 };
 
@@ -49,7 +45,6 @@ const Shape: FunctionalComponent<Props> = (props: Props) => {
   const [scale, setScale] = useState<number>(1.0);
 
   useEffect(() => {
-    console.log("FIRST")
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -57,8 +52,7 @@ const Shape: FunctionalComponent<Props> = (props: Props) => {
     if (!context) return;
 
     setCtx(context);
-    draw();
-    console.log("end")
+    //draw();
   }, []);
 
   useEffect(() => {
@@ -68,22 +62,13 @@ const Shape: FunctionalComponent<Props> = (props: Props) => {
   }, [ctx])
 
 
-  useEffect(() => {
-    if (!ctx) return;
-
-    draw();
-  }, [ctx])
-
   const draw = () => {
     if (!shape || !ctx) return;
-    ctx.fillStyle = "white";
-
+    ctx.fillStyle = canvasStyle?.backgroundColor || "white";
     //@ts-ignore
     ctx.fillRect(0, 0, canvasRef.current.width, canvasRef.current.height);
 
-    ctx.fillStyle = "black";
-
-    console.log(shape)
+    ctx.fillStyle = canvasStyle?.shapeColor || "black";
 
     //@ts-ignore
     shape.draw(ctx, canvasRef.current.width / 2, canvasRef.current.height / 2);

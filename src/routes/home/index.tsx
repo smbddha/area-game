@@ -1,21 +1,25 @@
 import { FunctionalComponent, h } from "preact";
 import { useState, useEffect } from "preact/hooks";
 
-import { Circle, IShape, IShapeGroup, ShapeEnum, makeShape } from "src/utils";
+import { IShape, IShapeGroup, ShapeEnum, makeShape } from "src/utils";
 import Shape from "src/components/shape";
-
-
 
 const canvasStyle = {
   width: 300, height: 500
 };
 
-//const circleGroup = new ShapeGroup(canvasStyle.width / 2, canvasStyle.height / 2, [Circle2, Circle3])
+const c1 = "#3724db";
+const c2 = "#C8DB24";
+
+const score = (a1: number, a2: number) => {
+
+}
 
 type Props = {
   advanceSlide: () => void;
   level: number;
 }
+
 
 const Slide: FunctionalComponent<Props> = (props: Props) => {
   const {
@@ -23,22 +27,10 @@ const Slide: FunctionalComponent<Props> = (props: Props) => {
     level
   } = props;
 
-  const [area1, setArea1] = useState<number>(0);
-  const [area2, setArea2] = useState<number>(0);
-
   const [shape1, setShape1] = useState<IShape | IShapeGroup>(makeShape(ShapeEnum.Rectangle, 1))
   const [shape2, setShape2] = useState<IShape | IShapeGroup>(makeShape(ShapeEnum.Circle, 3))
 
   useEffect(() => {
-    if (area1 === area2) {
-      console.log("MATCHING");
-    }
-  }, [area1, area2]);
-
-  useEffect(() => {
-    console.log("HERE resetting shapes", level);
-    setShape1(makeShape(ShapeEnum.Rectangle, 1));
-    setShape2(makeShape(ShapeEnum.Circle, 3));
   }, [level])
 
   const handleSubmitButton = () => {
@@ -46,21 +38,24 @@ const Slide: FunctionalComponent<Props> = (props: Props) => {
     let diff = shape1.getArea() - shape2.getArea();
     console.log(shape1.getArea(), shape2.getArea(), diff);
 
+
     advanceSlide()
+
+    setShape1(makeShape(ShapeEnum.Rectangle, 1));
+    setShape2(makeShape(ShapeEnum.Circle, 3));
   }
 
   return (
     <div style={style.home}>
-      <p>Area 1: {area1} Area 2: {area2}</p>
       <div style={style.shapesContainer}>
 
         <div style={style.shapeContainer}>
           {/* <Shape setArea={setArea1} shapeType={ShapeEnum.Circle} shapeCount={1} canvasStyle={canvasStyle} /> */}
-          <Shape key={level} setArea={setArea1} shape={shape1} canvasStyle={canvasStyle} />
+          <Shape key={level} shape={shape1} canvasStyle={{ ...canvasStyle, backgroundColor: c2, shapeColor: c1 }} />
         </div>
         <div style={style.shapeContainer}>
           {/* <Shape setArea={setArea2} shapeType={ShapeEnum.Rectangle} shapeCount={2} canvasStyle={canvasStyle} /> */}
-          <Shape key={level} setArea={setArea2} shape={shape2} canvasStyle={canvasStyle} />
+          <Shape key={level} shape={shape2} canvasStyle={{ ...canvasStyle, backgroundColor: c1, shapeColor: c2 }} />
         </div>
 
       </div>
@@ -74,7 +69,10 @@ const Slide: FunctionalComponent<Props> = (props: Props) => {
 const style = {
   home: {
     display: "flex",
-    flexDirection: "column"
+    flexDirection: "column",
+    backgroundColor: "#ebeeed",
+    minHeight: "100%",
+    width: "100%"
   },
   shapesContainer: {
     padding: "56px 20px",

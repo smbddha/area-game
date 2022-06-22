@@ -39,12 +39,6 @@ export class ShapeGroup implements IShapeGroup {
     }
 
     draw(ctx: CanvasRenderingContext2D, x?: number, y?: number) {
-        //if (x) this.x = 
-        //this.shapes.map(s => s.draw(ctx, nx, ny));
-
-        console.log("HERE")
-        console.log(y || this.y)
-
         let shapeCnt = this.shapes.length
         let ystep = ((y || this.y) * 2) / (shapeCnt + 1);
 
@@ -52,7 +46,6 @@ export class ShapeGroup implements IShapeGroup {
         for (let i = 0; i < shapeCnt; i++) {
             let ny = ystep * (i + 1);
             this.shapes[i].draw(ctx, nx, ny)
-            console.log("DRAW")
         }
     }
 
@@ -169,10 +162,14 @@ export class Triangle implements IShape {
 
     draw(ctx: CanvasRenderingContext2D, x?: number, y?: number) {
         if (x) this.x = x; if (y) this.y = y;
+        let sh = this.s * this.dims.h;
+        let sb = this.s * this.dims.b;
+
         ctx.beginPath();
-        ctx.moveTo(this.x, this.y - (this.dims.h / 2));
-        ctx.lineTo(this.x + (this.dims.b / 2), this.y + (this.dims.h / 2));
-        ctx.lineTo(this.x - (this.dims.b / 2), this.y + (this.dims.h / 2));
+        ctx.moveTo(this.x, this.y - (sh / 2));
+        ctx.lineTo(this.x + (sb / 2), this.y + (sh / 2));
+        ctx.lineTo(this.x - (sb / 2), this.y + (sh / 2));
+        ctx.fill();
         ctx.closePath();
     }
 
