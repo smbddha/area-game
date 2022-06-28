@@ -3,6 +3,8 @@ import { useState, useEffect } from "preact/hooks";
 
 import { IShape, IShapeGroup, ShapeEnum, makeShape } from "src/utils";
 import Shape from "src/components/shape";
+import Timer from "src/components/timer";
+import BoxButton from "src/components/boxbutton";
 
 const canvasStyle = {
   width: 300, height: 500
@@ -47,20 +49,28 @@ const Slide: FunctionalComponent<Props> = (props: Props) => {
 
   return (
     <div style={style.home}>
-      <div style={style.shapesContainer}>
-
-        <div style={style.shapeContainer}>
-          {/* <Shape setArea={setArea1} shapeType={ShapeEnum.Circle} shapeCount={1} canvasStyle={canvasStyle} /> */}
-          <Shape key={level} shape={shape1} canvasStyle={{ ...canvasStyle, backgroundColor: c2, shapeColor: c1 }} />
+      <div style={style.container}>
+        <div style={style.titleText}>
+          <h1>area game</h1>
         </div>
-        <div style={style.shapeContainer}>
-          {/* <Shape setArea={setArea2} shapeType={ShapeEnum.Rectangle} shapeCount={2} canvasStyle={canvasStyle} /> */}
-          <Shape key={level} shape={shape2} canvasStyle={{ ...canvasStyle, backgroundColor: c1, shapeColor: c2 }} />
+        <div >
+          <Timer />
         </div>
+        <div style={style.shapesContainer}>
 
-      </div>
-      <div>
-        <button onClick={handleSubmitButton}>Submit</button >
+          <div style={style.shapeContainer}>
+            {/* <Shape setArea={setArea1} shapeType={ShapeEnum.Circle} shapeCount={1} canvasStyle={canvasStyle} /> */}
+            <Shape key={level} shape={shape1} canvasStyle={{ ...canvasStyle, backgroundColor: c2, shapeColor: c1 }} />
+          </div>
+          <div style={style.shapeContainer}>
+            {/* <Shape setArea={setArea2} shapeType={ShapeEnum.Rectangle} shapeCount={2} canvasStyle={canvasStyle} /> */}
+            <Shape key={level} shape={shape2} canvasStyle={{ ...canvasStyle, backgroundColor: c1, shapeColor: c2 }} />
+          </div>
+
+        </div>
+        <div>
+          <BoxButton onClick={handleSubmitButton} title="next ->" style={{}} />
+        </div>
       </div>
     </div>
   );
@@ -68,14 +78,17 @@ const Slide: FunctionalComponent<Props> = (props: Props) => {
 
 const style = {
   home: {
-    display: "flex",
-    flexDirection: "column",
     backgroundColor: "#ebeeed",
     minHeight: "100%",
-    width: "100%"
+    width: "100%",
+  },
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    padding: "56px 40px",
   },
   shapesContainer: {
-    padding: "56px 20px",
     minHeight: "100%",
     width: "100%",
     display: "flex",

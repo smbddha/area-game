@@ -66,7 +66,8 @@ const Shape: FunctionalComponent<Props> = (props: Props) => {
     if (!shape || !ctx) return;
     ctx.fillStyle = canvasStyle?.backgroundColor || "white";
     //@ts-ignore
-    ctx.fillRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+    //ctx.fillRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+    ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
 
     ctx.fillStyle = canvasStyle?.shapeColor || "black";
 
