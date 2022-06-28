@@ -96,10 +96,11 @@ const ProgBar = (props) => {
 
   return (
     <div style={{
-      height: "10px",
+      height: 40,
       width: w,
       alignContent: "right",
-      float: "right"
+      float: "right",
+      flex: 1
     }}>
       <div style={{
         position: "absolute",
@@ -108,7 +109,7 @@ const ProgBar = (props) => {
       }}>
         <div
           style={{
-            height: "10px",
+            height: 22,
             width: w * props.percent,
             background: props.percent < 0.31 ? "#CA5252" : "#8BB447",
             float: "right",
@@ -118,7 +119,16 @@ const ProgBar = (props) => {
           }}>
         </div>
       </div>
-      <div style={{ height: "10px", width: w, ...styles.underProgBar }}></div>
+
+      <div style={{
+        height: 22,
+        marginTop: "4px",
+        marginLeft: "16px",
+        width: w - 16,
+        float: "right",
+        ...styles.underProgBar
+      }}></div>
+
     </div >
   );
 }
@@ -150,7 +160,8 @@ const Timer: FunctionalComponent<Props> = (props: Props) => {
 
 const styles = {
   container: {
-
+    display: "flex",
+    flexDirection: "column",
     float: "right"
   },
   progBar: {
