@@ -133,7 +133,7 @@ const ProgBar = (props) => {
   );
 }
 
-const Timer: FunctionalComponent<Props> = (props: Props) => {
+const TimerBar: FunctionalComponent<Props> = (props: Props) => {
 
   const [timeRemaining, { start, pause, resume, reset }] = useCountdownTimer(x);
 
