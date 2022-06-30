@@ -18,14 +18,14 @@ const score = (a1: number, a2: number) => {
 }
 
 type Props = {
-  advanceSlide: () => void;
+  advanceLevel: () => void;
   level: number;
 }
 
 
-const Slide: FunctionalComponent<Props> = (props: Props) => {
+const Level: FunctionalComponent<Props> = (props: Props) => {
   const {
-    advanceSlide,
+    advanceLevel,
     level
   } = props;
 
@@ -41,7 +41,7 @@ const Slide: FunctionalComponent<Props> = (props: Props) => {
     console.log(shape1.getArea(), shape2.getArea(), diff);
 
 
-    advanceSlide()
+    advanceLevel()
 
     setShape1(makeShape(ShapeEnum.Rectangle, 1));
     setShape2(makeShape(ShapeEnum.Circle, 3));
@@ -52,9 +52,6 @@ const Slide: FunctionalComponent<Props> = (props: Props) => {
       <div style={style.container}>
         <div style={style.titleText}>
           <h1>area game</h1>
-        </div>
-        <div >
-          <Timer />
         </div>
         <div style={style.shapesContainer}>
 
@@ -75,6 +72,8 @@ const Slide: FunctionalComponent<Props> = (props: Props) => {
     </div>
   );
 };
+
+export default Level;
 
 const style = {
   home: {
