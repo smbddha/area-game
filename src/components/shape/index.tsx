@@ -9,27 +9,6 @@ type Props = {
   canvasStyle: any;
 };
 
-/* const useShape = (shapeType, shapeCount) => {
- *   const [shape, setShape] = useState<IShape | null>(null);
- *   const [scale, setScale] = useState<number>(1.0);
- * 
- *   useEffect(() => {
- *     setShape(new Circle(50, 50, 20));
- *   });
- * 
- *   useEffect(() => {
- * 
- *   })
- * 
- *   const drawShape = () => shape?.draw();
- *   const scaleShape = (s) => shape?.scale(s);
- * 
- *   return {
- *     drawShape,
- *     scaleShape
- *   }
- * };
- *  */
 
 const Shape: FunctionalComponent<Props> = (props: Props) => {
   const {

@@ -71,8 +71,8 @@ export const useCountdownTimer = (t: number, interval: number = 1000) => {
 
   const actions = { start, pause, resume, reset };
 
-  return [
+  return {
     timeRemaining,
     actions
-  ];
+  };
 }

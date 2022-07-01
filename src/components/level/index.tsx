@@ -2,6 +2,7 @@ import { FunctionalComponent, h } from "preact";
 import { useState, useEffect } from "preact/hooks";
 
 import { IShape, IShapeGroup, ShapeEnum, makeShape } from "src/utils";
+
 import Shape from "src/components/shape";
 import Timer from "src/components/timer";
 import BoxButton from "src/components/boxbutton";
@@ -18,41 +19,22 @@ const score = (a1: number, a2: number) => {
 }
 
 type Props = {
-  advanceLevel: () => void;
   level: number;
+  shape1: IShape | IShapeGroup;
+  shape2: IShape | IShapeGroup;
 }
 
 
 const Level: FunctionalComponent<Props> = (props: Props) => {
   const {
-    advanceLevel,
-    level
+    level,
+    shape1,
+    shape2
   } = props;
-
-  const [shape1, setShape1] = useState<IShape | IShapeGroup>(makeShape(ShapeEnum.Rectangle, 1))
-  const [shape2, setShape2] = useState<IShape | IShapeGroup>(makeShape(ShapeEnum.Circle, 3))
-
-  useEffect(() => {
-  }, [level])
-
-  const handleSubmitButton = () => {
-    //let diff = area1 - area2;
-    let diff = shape1.getArea() - shape2.getArea();
-    console.log(shape1.getArea(), shape2.getArea(), diff);
-
-
-    advanceLevel()
-
-    setShape1(makeShape(ShapeEnum.Rectangle, 1));
-    setShape2(makeShape(ShapeEnum.Circle, 3));
-  }
 
   return (
     <div style={style.home}>
       <div style={style.container}>
-        <div style={style.titleText}>
-          <h1>area game</h1>
-        </div>
         <div style={style.shapesContainer}>
 
           <div style={style.shapeContainer}>
@@ -65,9 +47,6 @@ const Level: FunctionalComponent<Props> = (props: Props) => {
           </div>
 
         </div>
-        <div>
-          <BoxButton onClick={handleSubmitButton} title="next ->" style={{}} />
-        </div>
       </div>
     </div>
   );
@@ -78,23 +57,20 @@ export default Level;
 const style = {
   home: {
     backgroundColor: "#ebeeed",
-    minHeight: "100%",
     width: "100%",
   },
   container: {
     display: "flex",
     flexDirection: "column",
-    justifyContent: "center",
     padding: "56px 40px",
   },
   shapesContainer: {
-    minHeight: "100%",
     width: "100%",
     display: "flex",
     flexDirection: "row",
-    justifyContent: "center"
   },
   shapeContainer: {
+    flex: 1,
     padding: "20px",
     display: "flex",
     flexDirection: "column"

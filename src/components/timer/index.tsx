@@ -21,7 +21,6 @@ const Timer = (props: Props) => {
       width: w,
       alignContent: "right",
       float: "right",
-      flex: 1
     }}>
       <div style={{
         position: "absolute",
@@ -55,31 +54,6 @@ const Timer = (props: Props) => {
 }
 
 export default Timer;
-
-const TimerBar: FunctionalComponent<Props> = (props: Props) => {
-
-  const [timeRemaining, { start, pause, resume, reset }] = useCountdownTimer(x);
-
-  useEffect(() => {
-    console.log("STARTING")
-    start()
-  }, []);
-
-  useEffect(() => {
-    console.log('MAIN', timeRemaining);
-    if (timeRemaining === 0) console.log("FINISHED")
-  }, [timeRemaining]);
-
-  return (
-    <div style={styles.container}>
-      <ProgBar percent={(timeRemaining / (x * 1000))} />
-      <div style={styles.container}>
-        {timeRemaining}
-        <button onClick={() => { reset(); start() }}> RESTART </button>
-      </div>
-    </div>
-  )
-}
 
 const styles = {
   container: {
