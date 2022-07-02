@@ -29,13 +29,14 @@ const Game: FunctionalComponent = () => {
 
   const scoreLevel = (diff: number) => {
     setScore((s) => {
-      return s + Math.max(100 - diff, 0);
+      console.log(Math.max(1000 - diff, 0))
+      return Math.ceil(s + Math.max(1000 - diff, 0));
     });
   };
 
   const handleNext = () => {
     //let diff = area1 - area2;
-    let diff = shape1.getArea() - shape2.getArea();
+    let diff = Math.abs(shape1.getArea() - shape2.getArea());
     console.log(shape1.getArea(), shape2.getArea(), diff);
 
 
