@@ -1,11 +1,8 @@
 import { FunctionalComponent, h } from "preact";
-import { useState, useEffect } from "preact/hooks";
 
 import { IShape, IShapeGroup, ShapeEnum, makeShape } from "src/utils";
 
 import Shape from "src/components/shape";
-import Timer from "src/components/timer";
-import BoxButton from "src/components/boxbutton";
 
 const canvasStyle = {
   width: 300, height: 500
@@ -13,10 +10,6 @@ const canvasStyle = {
 
 const c1 = "#3724db";
 const c2 = "#C8DB24";
-
-const score = (a1: number, a2: number) => {
-
-}
 
 type Props = {
   level: number;
@@ -62,17 +55,18 @@ const style = {
   container: {
     display: "flex",
     flexDirection: "column",
-    padding: "56px 40px",
   },
   shapesContainer: {
     width: "100%",
     display: "flex",
     flexDirection: "row",
+    justifyContent: "space-between",
   },
   shapeContainer: {
-    flex: 1,
-    padding: "20px",
+    padding: "0px",
     display: "flex",
-    flexDirection: "column"
+    flexDirection: "column",
+    paddingLeft: "10px",
+    paddingRight: "10px"
   }
 }

@@ -43,7 +43,7 @@ const Shape: FunctionalComponent<Props> = (props: Props) => {
 
   const draw = () => {
     if (!shape || !ctx) return;
-    ctx.fillStyle = canvasStyle?.backgroundColor || "white";
+    //ctx.fillStyle = canvasStyle?.backgroundColor || "white";
     //@ts-ignore
     //ctx.fillRect(0, 0, canvasRef.current.width, canvasRef.current.height);
     ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
@@ -72,11 +72,28 @@ const Shape: FunctionalComponent<Props> = (props: Props) => {
   return (
     <div>
       <canvas ref={canvasRef} width={canvasStyle.width} height={canvasStyle.height} />
-      <div class="slidecontainer">
-        <input type="range" min="1" max="100" value={scale * 50} class="slider" id="myRange" onInput={handleInput} />
+      <div style={styles.sliderContainer}>
+        <div class="slidecontainer" style={{ ...styles.slider }}>
+          <input type="range" min="1" max="100" value={scale * 50} class="slider" id="myRange" onInput={handleInput} />
+        </div>
       </div>
     </div>
   )
 }
 
 export default Shape;
+
+const styles = {
+  sliderContainer: {
+    display: "flex",
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "center",
+    width: "100%"
+  },
+  slider: {
+    flex: 1,
+    maxWidth: 200,
+    float: "center"
+  }
+}

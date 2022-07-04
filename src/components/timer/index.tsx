@@ -5,7 +5,8 @@ import { useCountdownTimer } from "src/utils/hooks/useCountdownTimer";
 
 
 type Props = {
-  percent: number
+  percent: number;
+  displayNum: number;
 }
 
 const x = 10;
@@ -13,7 +14,7 @@ const x = 10;
 const Timer = (props: Props) => {
   const w = 250;
 
-  console.log("PER,", props.percent)
+  const { percent, displayNum } = props;
 
   return (
     <div style={{
@@ -30,8 +31,8 @@ const Timer = (props: Props) => {
         <div
           style={{
             height: 22,
-            width: w * props.percent,
-            background: props.percent < 0.31 ? "#CA5252" : "#8BB447",
+            width: w * percent,
+            background: percent < 0.31 ? "#CA5252" : "#8BB447",
             float: "right",
             position: "relative",
             right: 0,
@@ -48,6 +49,17 @@ const Timer = (props: Props) => {
         float: "right",
         ...styles.underProgBar
       }}></div>
+
+      <div style={{
+        height: 22,
+        marginTop: "28px",
+        float: "right",
+        fontSize: "20px",
+        fontWeight: "bold",
+        color: percent < 0.31 ? "#CA5252" : "#8BB447"
+      }}>
+        {displayNum}
+      </div>
 
     </div >
   );
