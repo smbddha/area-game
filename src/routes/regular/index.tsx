@@ -1,27 +1,50 @@
 import { FunctionalComponent, h } from "preact";
 import { useState, useEffect } from "preact/hooks";
+import Modal from "react-modal";
 
 import { IShape, IShapeGroup, ShapeEnum, makeShape } from "src/utils";
 import { useCountdownTimer } from "src/utils/hooks/useCountdownTimer";
 
 import Level from "src/components/level";
-import Shape from "src/components/shape";
 import Timer from "src/components/timer";
 import BoxButton from "src/components/boxbutton";
+import { useGame } from "src/utils/hooks/useGame";
+import { GameTypeEnum } from "src/utils/types";
 
+enum GameStateEnum {
+  Pre = "PRE",
+  Playing = "PLAYING",
+  Post = "POST",
+}
+
+const customStyles = {
+  content: {
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    transform: "translate(-50%, -50%)",
+  },
+};
+
+Modal.setAppElement("#preact_root");
+
+const numLevels = 10;
 const RegularGame: FunctionalComponent = () => {
-  const { timeRemaining, actions } = useCountdownTimer(10);
-  const [currentLevel, setCurrentLevel] = useState<number>(1);
-  const [score, setScore] = useState<number>(0);
+  // const { timeRemaining, actions } = useCountdownTimer(10);
+  // const [currentLevel, setCurrentLevel] = useState<number>(1);
+  // const [score, setScore] = useState<number>(0);
+  // const [gameState, setGameState] = useState<GameStateEnum>(GameStateEnum.Pre);
 
-  const [shape1, setShape1] = useState<IShape | IShapeGroup>(
-    makeShape(ShapeEnum.Rectangle, 1)
-  );
-  const [shape2, setShape2] = useState<IShape | IShapeGroup>(
-    makeShape(ShapeEnum.Circle, 3)
-  );
+  // const [shape1, setShape1] = useState<IShape | IShapeGroup>(
+  //   makeShape(ShapeEnum.Rectangle, 1)
+  // );
+  // const [shape2, setShape2] = useState<IShape | IShapeGroup>(
+  //   makeShape(ShapeEnum.Circle, 3)
+  // );
 
-  const renderLevel = () => { };
+  // const renderLevel = () => {};
 
   const formatPercent = (tr: number) => {
     return tr / (10 * 1000);
@@ -31,28 +54,70 @@ const RegularGame: FunctionalComponent = () => {
     return Math.floor(tr / 1000);
   };
 
-  const scoreLevel = (diff: number) => {
-    setScore((s) => {
-      console.log(Math.max(1000 - diff, 0));
-      return Math.ceil(s + Math.max(1000 - diff, 0));
-    });
+  // const scoreLevel = (diff: number) => {
+  //   setScore((s) => {
+  //     console.log(Math.max(1000 - diff, 0));
+  //     return Math.ceil(s + Math.max(1000 - diff, 0));
+  //   });
+  // };
+
+  // const handleNext = () => {
+  //   //let diff = area1 - area2;
+  //   let diff = Math.abs(shape1.getArea() - shape2.getArea());
+  //   console.log(shape1.getArea(), shape2.getArea(), diff);
+
+  //   scoreLevel(diff);
+
+  //   setShape1(makeShape(ShapeEnum.Rectangle));
+  //   setShape2(makeShape(ShapeEnum.Circle));
+
+  //   if (currentLevel === numLevels) {
+  //     console.log("HERE");
+  //     setGameState(GameStateEnum.Post);
+  //     return;
+  //   }
+  //   setCurrentLevel((n) => n + 1);
+  // };
+
+  const {
+    shape1,
+    shape2,
+    score,
+    timeRemaining,
+    currentLevel,
+    goNextLevel,
+    gameState,
+  } = useGame(GameTypeEnum.Regular);
+
+  const closePreModal = () => {
+    setGameState(GameStateEnum.Playing);
   };
 
-  const handleNext = () => {
-    //let diff = area1 - area2;
-    let diff = Math.abs(shape1.getArea() - shape2.getArea());
-    console.log(shape1.getArea(), shape2.getArea(), diff);
-
-    scoreLevel(diff);
-
-    setShape1(makeShape(ShapeEnum.Rectangle, 1));
-    setShape2(makeShape(ShapeEnum.Circle, 3));
-
-    setCurrentLevel((n) => n + 1);
+  const closePostModal = () => {
+    // setGameState(GameStateEnum.Playing);
   };
 
   return (
     <div style={styles.mainContainer}>
+      <Modal
+        isOpen={gameState === GameStateEnum.Pre}
+        // onAfterOpen={afterOpenModal}
+        onRequestClose={closePreModal}
+        style={customStyles}
+        contentLabel="Example Modal"
+      >
+        HELLO
+      </Modal>
+      <Modal
+        isOpen={gameState === GameStateEnum.Post}
+        // onAfterOpen={afterOpenModal}
+        onRequestClose={closePostModal}
+        style={customStyles}
+        contentLabel="Example Modal"
+      >
+        FINISHED
+      </Modal>
+
       <div style={styles.container}>
         <div style={styles.rowContainer}>
           <div style={styles.header}>
@@ -131,7 +196,7 @@ const RegularGame: FunctionalComponent = () => {
             </div>
             <div style={{ flex: 1 }}>
               <BoxButton
-                onClick={handleNext}
+                onClick={handleNextLevel}
                 title="next ->"
                 style={{ width: 220, height: 40, fontSize: 30 }}
               />
