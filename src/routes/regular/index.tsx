@@ -47,11 +47,11 @@ const RegularGame: FunctionalComponent = () => {
   // const renderLevel = () => {};
 
   const formatPercent = (tr: number) => {
-    return tr / (10 * 1000);
+    return tr / (11 * 1000);
   };
 
   const formatDisplayNum = (tr: number) => {
-    return Math.floor(tr / 1000);
+    return Math.ceil(tr / 1000);
   };
 
   // const scoreLevel = (diff: number) => {
@@ -80,6 +80,7 @@ const RegularGame: FunctionalComponent = () => {
   // };
 
   const {
+    start,
     shape1,
     shape2,
     score,
@@ -87,10 +88,12 @@ const RegularGame: FunctionalComponent = () => {
     currentLevel,
     goNextLevel,
     gameState,
+    setGameState,
   } = useGame(GameTypeEnum.Regular);
 
   const closePreModal = () => {
     setGameState(GameStateEnum.Playing);
+    start();
   };
 
   const closePostModal = () => {
@@ -136,7 +139,7 @@ const RegularGame: FunctionalComponent = () => {
           >
             <Timer
               percent={formatPercent(timeRemaining)}
-              displayNum={formatDisplayNum(timeRemaining)}
+              displayNum={formatDisplayNum(timeRemaining + 1)}
             />
           </div>
           <div
@@ -196,7 +199,7 @@ const RegularGame: FunctionalComponent = () => {
             </div>
             <div style={{ flex: 1 }}>
               <BoxButton
-                onClick={handleNextLevel}
+                onClick={goNextLevel}
                 title="next ->"
                 style={{ width: 220, height: 40, fontSize: 30 }}
               />

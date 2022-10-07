@@ -1,7 +1,9 @@
-import { useRef, useCallback, useState } from "preact/hooks";
+import { useEffect, useCallback, useState } from "preact/hooks";
 import { IShapeGroup, makeRandomShapes, makeShape, ShapeEnum } from "../shapes";
 import { GameStateEnum, GameTypeEnum } from "../types";
 import { useCountdownTimer } from "./useCountdownTimer";
+
+const LevelDurationSeconds = 10;
 
 export const useGame = (gameType: GameTypeEnum) => {
   const [shape1, setShape1] = useState<IShapeGroup>(makeRandomShapes());
@@ -10,7 +12,7 @@ export const useGame = (gameType: GameTypeEnum) => {
 
   const [score, setScore] = useState<number>(0);
 
-  const { timeRemaining, actions } = useCountdownTimer(10);
+  const { timeRemaining, actions } = useCountdownTimer(LevelDurationSeconds);
   const [currentLevel, setCurrentLevel] = useState<number>(1);
 
   // TODO change for different gametypes
@@ -23,15 +25,16 @@ export const useGame = (gameType: GameTypeEnum) => {
     });
   };
 
+  const start = () => {
+    actions.reset();
+    actions.start(LevelDurationSeconds);
+  };
+
   const goNextLevel = () => {
     let diff = Math.abs(shape1.getArea() - shape2.getArea());
     console.log(shape1.getArea(), shape2.getArea(), diff);
 
     scoreLevel(diff);
-
-    // generate new shapes for the next level
-    setShape1(makeRandomShapes());
-    setShape2(makeRandomShapes());
 
     if (currentLevel === numLevels) {
       console.log("HERE");
@@ -39,9 +42,28 @@ export const useGame = (gameType: GameTypeEnum) => {
       return;
     }
     setCurrentLevel((n) => n + 1);
+
+    // generate new shapes for the next level
+    setShape1(makeRandomShapes());
+    setShape2(makeRandomShapes());
+
+    start();
   };
 
+  useEffect(() => {
+    if (timeRemaining <= 0) {
+      console.log("NO TIME REMAINING");
+      goNextLevel();
+    }
+
+    if (currentLevel === numLevels) {
+      actions.reset();
+      actions.pause();
+    }
+  }, [timeRemaining]);
+
   return {
+    start,
     shape1,
     shape2,
     score,
@@ -49,5 +71,6 @@ export const useGame = (gameType: GameTypeEnum) => {
     currentLevel,
     goNextLevel,
     gameState,
+    setGameState,
   };
 };
