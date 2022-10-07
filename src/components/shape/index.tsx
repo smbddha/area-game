@@ -72,6 +72,7 @@ const Shape: FunctionalComponent<Props> = (props: Props) => {
   return (
     <div>
       <canvas ref={canvasRef} width={canvasStyle.width} height={canvasStyle.height} />
+			<div>{shape.getArea()}</div>
       <div style={styles.sliderContainer}>
         <div class="slidecontainer" style={{ ...styles.slider }}>
           <input type="range" min="1" max="100" value={scale * 50} class="slider" id="myRange" onInput={handleInput} />
