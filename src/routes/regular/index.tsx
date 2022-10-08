@@ -47,11 +47,11 @@ const RegularGame: FunctionalComponent = () => {
   // const renderLevel = () => {};
 
   const formatPercent = (tr: number) => {
-    return tr / (11 * 1000);
+    return tr / (10 * 1000);
   };
 
   const formatDisplayNum = (tr: number) => {
-    return Math.ceil(tr / 1000);
+    return Math.ceil((tr - 1) / 1000);
   };
 
   // const scoreLevel = (diff: number) => {
@@ -109,7 +109,12 @@ const RegularGame: FunctionalComponent = () => {
         style={customStyles}
         contentLabel="Example Modal"
       >
-        HELLO
+        <h1> Regular Game</h1>
+        <p>
+          You have ten rounds to get the highest score possible! Adjust the
+          sliders below the shapes the match their areas.
+        </p>
+        <button onclick={closePreModal}>Start</button>
       </Modal>
       <Modal
         isOpen={gameState === GameStateEnum.Post}
@@ -139,7 +144,7 @@ const RegularGame: FunctionalComponent = () => {
           >
             <Timer
               percent={formatPercent(timeRemaining)}
-              displayNum={formatDisplayNum(timeRemaining + 1)}
+              displayNum={formatDisplayNum(timeRemaining)}
             />
           </div>
           <div
@@ -149,11 +154,23 @@ const RegularGame: FunctionalComponent = () => {
               justifyContent: "center",
             }}
           >
-            <text style={{ ...styles.scoreText, ...styles.shadowedText }}>
-              {score}
-            </text>
+            <div
+              style={{
+                ...styles.columnContainer,
+
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <text>your score</text>
+              <text style={{ ...styles.scoreText, ...styles.shadowedText }}>
+                {score}
+              </text>
+            </div>
           </div>
+
           <Level level={currentLevel} shape1={shape1} shape2={shape2} />
+
           <div
             style={{
               marginTop: 30,
@@ -240,6 +257,12 @@ const styles = {
     display: "flex",
     flexDirection: "row",
     alignItems: "left",
+  },
+  columnContainer: {
+    // width: "100%",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
   },
   header: {
     flex: 1,

@@ -21,6 +21,8 @@ export const useGame = (gameType: GameTypeEnum) => {
   const scoreLevel = (diff: number) => {
     setScore((s) => {
       console.log(Math.max(1000 - diff, 0));
+
+      // TODO play around with the scoring
       return Math.ceil(s + Math.max(1000 - diff, 0));
     });
   };

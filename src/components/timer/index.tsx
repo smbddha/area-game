@@ -1,13 +1,14 @@
 import { FunctionalComponent, h } from "preact";
 import { useEffect } from "preact/hooks";
 
-import { useCountdownTimer } from "src/utils/hooks/useCountdownTimer";
+import { motion } from "framer-motion";
 
+import { useCountdownTimer } from "src/utils/hooks/useCountdownTimer";
 
 type Props = {
   percent: number;
   displayNum: number;
-}
+};
 
 const x = 10;
 
@@ -17,18 +18,22 @@ const Timer = (props: Props) => {
   const { percent, displayNum } = props;
 
   return (
-    <div style={{
-      height: 40,
-      width: w,
-      alignContent: "right",
-      float: "right",
-    }}>
-      <div style={{
-        position: "absolute",
+    <div
+      style={{
+        height: 22,
         width: w,
-        ...styles.progBarContainer
-      }}>
-        <div
+        alignContent: "right",
+        float: "right",
+      }}
+    >
+      <div
+        style={{
+          position: "absolute",
+          width: w,
+          ...styles.progBarContainer,
+        }}
+      >
+        <motion.div
           style={{
             height: 22,
             width: w * percent,
@@ -36,34 +41,35 @@ const Timer = (props: Props) => {
             float: "right",
             position: "relative",
             right: 0,
-            ...styles.progBar
-          }}>
-        </div>
+            ...styles.progBar,
+          }}
+        ></motion.div>
       </div>
 
-      <div style={{
+      {/* <div style={{
         height: 22,
         marginTop: "4px",
         marginLeft: "16px",
         width: w - 16,
         float: "right",
         ...styles.underProgBar
-      }}></div>
+				}}></div> */}
 
-      <div style={{
-        height: 22,
-        marginTop: "28px",
-        float: "right",
-        fontSize: "20px",
-        fontWeight: "bold",
-        color: percent < 0.31 ? "#CA5252" : "#8BB447"
-      }}>
+      <div
+        style={{
+          height: 22,
+          marginTop: "28px",
+          float: "right",
+          fontSize: "20px",
+          fontWeight: "bold",
+          color: percent < 0.31 ? "#CA5252" : "#8BB447",
+        }}
+      >
         {displayNum}
       </div>
-
-    </div >
+    </div>
   );
-}
+};
 
 export default Timer;
 
@@ -71,7 +77,7 @@ const styles = {
   container: {
     display: "flex",
     flexDirection: "column",
-    float: "right"
+    float: "right",
   },
   progBar: {
     transition: "1s linear",
@@ -81,15 +87,13 @@ const styles = {
   },
   progBarContainer: {
     /* position: "absolute", */
-    zIndex: 10,
+    zIndex: 1,
     float: "right",
     textAlign: "right",
   },
   underProgBar: {
     position: "absolute",
     zIndex: 1,
-    background: "#BBBBBB"
-  }
-
-}
-
+    background: "#BBBBBB",
+  },
+};
