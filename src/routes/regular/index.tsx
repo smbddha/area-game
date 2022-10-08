@@ -10,6 +10,7 @@ import Timer from "src/components/timer";
 import BoxButton from "src/components/boxbutton";
 import { useGame } from "src/utils/hooks/useGame";
 import { GameTypeEnum } from "src/utils/types";
+import Counter from "src/components/counter";
 
 enum GameStateEnum {
   Pre = "PRE",
@@ -83,6 +84,7 @@ const RegularGame: FunctionalComponent = () => {
     start,
     shape1,
     shape2,
+    prevScore,
     score,
     timeRemaining,
     currentLevel,
@@ -163,9 +165,10 @@ const RegularGame: FunctionalComponent = () => {
               }}
             >
               <text>your score</text>
-              <text style={{ ...styles.scoreText, ...styles.shadowedText }}>
+              {/*<text style={{ ...styles.scoreText, ...styles.shadowedText }}>
                 {score}
-              </text>
+								</text> */}
+              <Counter from={prevScore} to={score} />
             </div>
           </div>
 

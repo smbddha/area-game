@@ -11,6 +11,7 @@ export const useGame = (gameType: GameTypeEnum) => {
   const [gameState, setGameState] = useState<GameStateEnum>(GameStateEnum.Pre);
 
   const [score, setScore] = useState<number>(0);
+  const [prevScore, setPrevScore] = useState<number>(0);
 
   const { timeRemaining, actions } = useCountdownTimer(LevelDurationSeconds);
   const [currentLevel, setCurrentLevel] = useState<number>(1);
@@ -21,6 +22,7 @@ export const useGame = (gameType: GameTypeEnum) => {
   const scoreLevel = (diff: number) => {
     setScore((s) => {
       console.log(Math.max(1000 - diff, 0));
+      setPrevScore(s);
 
       // TODO play around with the scoring
       return Math.ceil(s + Math.max(1000 - diff, 0));
@@ -37,6 +39,13 @@ export const useGame = (gameType: GameTypeEnum) => {
     console.log(shape1.getArea(), shape2.getArea(), diff);
 
     scoreLevel(diff);
+
+    // TODO add some sort of delay here
+    // user should be able to see their score appear + be added
+    // to their total and see the actual areas of the shapes for
+    // a second
+
+    // actually do the delay here
 
     if (currentLevel === numLevels) {
       console.log("HERE");
@@ -55,6 +64,12 @@ export const useGame = (gameType: GameTypeEnum) => {
   useEffect(() => {
     if (timeRemaining <= 0) {
       console.log("NO TIME REMAINING");
+
+      // TODO add some sort of delay here
+      // user should be able to see their score appear + be added
+      // to their total and see the actual areas of the shapes for
+      // a second
+
       goNextLevel();
     }
 
@@ -68,11 +83,13 @@ export const useGame = (gameType: GameTypeEnum) => {
     start,
     shape1,
     shape2,
+    prevScore,
     score,
     timeRemaining,
     currentLevel,
     goNextLevel,
     gameState,
     setGameState,
+    // disableInput,
   };
 };

@@ -1,18 +1,19 @@
 import { FunctionalComponent, h } from "preact";
-import { useEffect } from "preact/hooks";
+import { useState } from "preact/hooks";
 
-import { motion } from "framer-motion";
-
-import { useCountdownTimer } from "src/utils/hooks/useCountdownTimer";
+import { motion, useTime, useTransform } from "framer-motion";
 
 type Props = {
   percent: number;
   displayNum: number;
+  startNum: number;
+  run: boolean;
 };
 
 const x = 10;
 
-const Timer = (props: Props) => {
+const Timer = (props: Props): FunctionalComponent => {
+  const [running, setRunning] = useState<boolean>(false);
   const w = 250;
 
   const { percent, displayNum } = props;
@@ -26,6 +27,7 @@ const Timer = (props: Props) => {
         float: "right",
       }}
     >
+      {/*
       <div
         style={{
           position: "absolute",
@@ -33,20 +35,38 @@ const Timer = (props: Props) => {
           ...styles.progBarContainer,
         }}
       >
-        <motion.div
-          style={{
-            height: 22,
-            width: w * percent,
-            background: percent < 0.31 ? "#CA5252" : "#8BB447",
-            float: "right",
-            position: "relative",
-            right: 0,
-            ...styles.progBar,
-          }}
-        ></motion.div>
+        {displayNum !== 10 ? (
+          <motion.div
+            style={{
+              height: 22,
+              // width: w * percent,
+              background: percent < 0.31 ? "#CA5252" : "#8BB447",
+              float: "right",
+              position: "relative",
+              right: 0,
+              ...styles.progBar,
+            }}
+            // animate={{ width: w * percent }}
+            initial={{ width: 250 }}
+            animate={{ width: 0 }}
+            transition={{ duration: 10, ease: "linear" }}
+          ></motion.div>
+        ) : (
+          <div
+            style={{
+              height: 22,
+              width: w,
+              background: percent < 0.31 ? "#CA5252" : "#8BB447",
+              float: "right",
+              position: "relative",
+              right: 0,
+              ...styles.progBar,
+            }}
+          ></div>
+        )}
       </div>
 
-      {/* <div style={{
+       <div style={{
         height: 22,
         marginTop: "4px",
         marginLeft: "16px",
@@ -80,7 +100,7 @@ const styles = {
     float: "right",
   },
   progBar: {
-    transition: "1s linear",
+    // transition: "1s linear",
     /*position: "absolute",
      right: 0,
      * zIndex: 2, */
