@@ -95,7 +95,6 @@ export class Circle implements IShape {
   }
 
   getArea() {
-    console.log("CIRCLE", this.dims.r, this.s);
     let sr = this.dims.r * this.s;
     return Math.PI * (sr * sr);
   }
@@ -142,7 +141,6 @@ export class Rectangle implements IShape {
   }
 
   getArea() {
-    console.log("RECT", this.dims.w, this.dims.h, this.s);
     return this.dims.w * this.s * (this.dims.h * this.s);
   }
 
@@ -157,6 +155,7 @@ export class Rectangle implements IShape {
     });
   }
 }
+
 export class Triangle implements IShape {
   x: number;
   y: number;

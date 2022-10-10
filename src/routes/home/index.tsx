@@ -1,11 +1,33 @@
 import { FunctionalComponent, h } from "preact";
 import { useState, useEffect } from "preact/hooks";
+import { route } from "preact-router";
+
+import BoxButton from "src/components/boxbutton";
 
 const Home: FunctionalComponent = () => {
+  const goRegularGame = () => route("/regular");
+  const goTimedGame = () => route("/timed");
+  const goPracticeGame = () => route("/practice");
+
   return (
     <div style={styles.mainContainer}>
-					home
-     </div>
+      home
+      <BoxButton
+        onClick={goRegularGame}
+        title="regular"
+        style={{ width: 220, height: 40, fontSize: 30 }}
+      />
+      <BoxButton
+        onClick={goRegularGame}
+        title="timed"
+        style={{ width: 220, height: 40, fontSize: 30 }}
+      />
+      <BoxButton
+        onClick={goPracticeGame}
+        title="practice"
+        style={{ width: 220, height: 40, fontSize: 30 }}
+      />
+    </div>
   );
 };
 
