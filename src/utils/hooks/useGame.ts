@@ -12,6 +12,7 @@ export const useGame = (gameType: GameTypeEnum) => {
 
   const [score, setScore] = useState<number>(0);
   const [prevScore, setPrevScore] = useState<number>(0);
+  const [prevLevelScore, setPrevLevelScore] = useState<number>(-1);
 
   const { timeRemaining, actions } = useCountdownTimer(LevelDurationSeconds);
   const [currentLevel, setCurrentLevel] = useState<number>(1);
@@ -23,6 +24,7 @@ export const useGame = (gameType: GameTypeEnum) => {
     setScore((s) => {
       console.log(Math.max(1000 - diff, 0));
       setPrevScore(s);
+      setPrevLevelScore(Math.max(1000 - diff, 0));
 
       // TODO play around with the scoring
       return Math.ceil(s + Math.max(1000 - diff, 0));
@@ -85,6 +87,7 @@ export const useGame = (gameType: GameTypeEnum) => {
     shape2,
     prevScore,
     score,
+			prevLevelScore,
     timeRemaining,
     currentLevel,
     goNextLevel,

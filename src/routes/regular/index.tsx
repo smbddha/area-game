@@ -1,6 +1,7 @@
 import { FunctionalComponent, h } from "preact";
 import { useState, useEffect } from "preact/hooks";
 import Modal from "react-modal";
+import { motion } from "framer-motion";
 
 import { IShape, IShapeGroup, ShapeEnum, makeShape } from "src/utils";
 import { useCountdownTimer } from "src/utils/hooks/useCountdownTimer";
@@ -86,6 +87,7 @@ const RegularGame: FunctionalComponent = () => {
     shape2,
     prevScore,
     score,
+    prevLevelScore,
     timeRemaining,
     currentLevel,
     goNextLevel,
@@ -116,7 +118,7 @@ const RegularGame: FunctionalComponent = () => {
           You have ten rounds to get the highest score possible! Adjust the
           sliders below the shapes the match their areas.
         </p>
-        <button onclick={closePreModal}>Start</button>
+        <button onClick={closePreModal}>Start</button>
       </Modal>
       <Modal
         isOpen={gameState === GameStateEnum.Post}
@@ -168,7 +170,12 @@ const RegularGame: FunctionalComponent = () => {
               {/*<text style={{ ...styles.scoreText, ...styles.shadowedText }}>
                 {score}
 								</text> */}
-              <Counter from={prevScore} to={score} />
+              <Counter
+                style={{ ...styles.scoreText, ...styles.shadowedText }}
+                from={prevScore}
+                to={score}
+              />
+              {prevLevelScore > 0 ? <motion.div /> : null}
             </div>
           </div>
 

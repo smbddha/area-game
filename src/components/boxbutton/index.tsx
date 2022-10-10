@@ -33,7 +33,7 @@ const BoxButton: FunctionalComponent<Props> = (props: Props) => {
         {title}
       </button>
       <div style={styles.labelContainer}>
-        <text>{label || null}[enter]</text>
+        <text>{label || null}</text>
       </div>
     </div>
   )
