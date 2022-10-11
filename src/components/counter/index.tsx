@@ -2,10 +2,10 @@ import { FunctionalComponent, h } from "preact";
 import { useRef, useEffect } from "preact/hooks";
 import { animate } from "framer-motion";
 
-type Props = { from: number; to: number };
+type Props = { from: number; to: number; style: object };
 
 const Counter = (props: Props) => {
-  const { from, to } = props;
+  const { from, to, style } = props;
   const nodeRef = useRef<HTMLDivElement>();
 
   useEffect(() => {
@@ -22,7 +22,7 @@ const Counter = (props: Props) => {
     return () => controls.stop();
   }, [from, to]);
 
-  return <div ref={nodeRef} />;
+  return <div style={style} ref={nodeRef} />;
 };
 
 export default Counter;

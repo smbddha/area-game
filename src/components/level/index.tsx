@@ -1,4 +1,5 @@
 import { FunctionalComponent, h } from "preact";
+import { useEffect, useRef } from "preact/hooks";
 
 import { IShape, IShapeGroup, ShapeEnum, makeShape } from "src/utils";
 
@@ -12,6 +13,8 @@ const canvasStyle = {
 const c1 = "#3724db";
 const c2 = "#C8DB24";
 
+const canvasRatio = 3.0 / 2.0;
+
 type Props = {
   level: number;
   shape1: IShape | IShapeGroup;
@@ -21,32 +24,41 @@ type Props = {
 const Level: FunctionalComponent<Props> = (props: Props) => {
   const { level, shape1, shape2 } = props;
 
+  const shapesContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (shapesContainerRef.current) {
+      console.log(
+        shapesContainerRef.current.clientHeight,
+        shapesContainerRef.current.clientWidth
+      );
+    }
+  });
+
   return (
-    <div style={style.home}>
-      <div style={style.container}>
-        <div style={style.shapesContainer}>
-          <div style={style.shapeContainer}>
-            <Shape
-              key={level}
-              shape={shape1}
-              canvasStyle={{
-                ...canvasStyle,
-                backgroundColor: c2,
-                shapeColor: c1,
-              }}
-            />
-          </div>
-          <div style={style.shapeContainer}>
-            <Shape
-              key={level}
-              shape={shape2}
-              canvasStyle={{
-                ...canvasStyle,
-                backgroundColor: c1,
-                shapeColor: c2,
-              }}
-            />
-          </div>
+    <div style={style.container}>
+      <div ref={shapesContainerRef} style={style.shapesContainer}>
+        <div style={style.shapeContainer}>
+          <Shape
+            key={level}
+            shape={shape1}
+            canvasStyle={{
+              // ...canvasStyle,
+              backgroundColor: c2,
+              shapeColor: c1,
+            }}
+          />
+        </div>
+        <div style={style.shapeContainer}>
+          <Shape
+            key={level}
+            shape={shape2}
+            canvasStyle={{
+              // ...canvasStyle,
+              backgroundColor: c1,
+              shapeColor: c2,
+            }}
+          />
         </div>
       </div>
     </div>
@@ -59,13 +71,17 @@ const style = {
   home: {
     // backgroundColor: "#ebeeed",
     width: "100%",
+    height: "100%",
   },
   container: {
     display: "flex",
     flexDirection: "column",
+    width: "100%",
+    height: "100%",
   },
   shapesContainer: {
     width: "100%",
+    height: "100%",
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
@@ -74,6 +90,7 @@ const style = {
     padding: "0px",
     display: "flex",
     flexDirection: "column",
+    width: "100%",
     paddingLeft: "10px",
     paddingRight: "10px",
   },

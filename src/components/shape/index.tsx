@@ -1,7 +1,8 @@
-import { FunctionalComponent, h } from "preact";
+import { FunctionalComponent, h, Fragment } from "preact";
 import { useRef, useEffect, useState } from "preact/hooks";
+import { colors } from "src/style";
 
-import { IShape, IShapeGroup, ShapeEnum, makeShape } from "src/utils";
+import { IShape, IShapeGroup, clamp } from "src/utils";
 
 type Props = {
   key: number;
@@ -9,13 +10,18 @@ type Props = {
   canvasStyle: any;
 };
 
+const scaleLowerBound = 0.2;
+const scaleUpperBound = 2.0;
+const scaleRange = scaleUpperBound - scaleLowerBound;
+
+const DEBUG = true;
 
 const Shape: FunctionalComponent<Props> = (props: Props) => {
   const {
     //matchArea,
     key,
     shape,
-    canvasStyle
+    canvasStyle,
   } = props;
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -26,6 +32,12 @@ const Shape: FunctionalComponent<Props> = (props: Props) => {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+
+    canvas.style.height = "90%";
+    canvas.style.width = "100%";
+
+    canvas.height = canvas.offsetHeight;
+    canvas.width = canvas.offsetWidth;
 
     const context = canvas.getContext("2d");
     if (!context) return;
@@ -38,49 +50,73 @@ const Shape: FunctionalComponent<Props> = (props: Props) => {
     if (!ctx) return;
 
     draw();
-  }, [ctx])
+  }, [ctx]);
 
+  useEffect(() => {
+    shape.scale(scale);
+    draw();
+  }, [scale]);
 
   const draw = () => {
     if (!shape || !ctx) return;
-    //ctx.fillStyle = canvasStyle?.backgroundColor || "white";
-    //@ts-ignore
-    //ctx.fillRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+    if (!canvasRef.current) return;
+
     ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-
-    ctx.fillStyle = canvasStyle?.shapeColor || "black";
-
-    //@ts-ignore
+    ctx.fillStyle = canvasStyle?.shapeColor || colors.white;
     shape.draw(ctx, canvasRef.current.width / 2, canvasRef.current.height / 2);
-    //setArea(shape.getArea());
-  }
+
+    if (DEBUG) {
+      ctx.font = "20px sans-serif";
+      // ctx.strokeStyle = "red";
+      ctx.fillStyle = "red";
+      ctx.fillText(
+        `${shape.getArea().toFixed(1)}`,
+        canvasRef.current.width / 2 - 30,
+        canvasRef.current.height / 2
+      );
+    }
+  };
 
   const handleInput = (e: any) => {
     if (!shape) return;
 
     let val = e.target.valueAsNumber;
-    let s = val / 50;
+    let s = scaleLowerBound + ((val - 1) / 99) * scaleRange;
 
+    console.log(val, s);
     setScale(s);
-    //@ts-ignore
-    shape.scale(s);
-
-    draw();
   };
 
+  const handleWheel = (e: WheelEvent) => {
+    console.log(e);
+    let d = e.deltaY;
+
+    setScale((s) => {
+      let ns = s + d / 3500;
+      return clamp(ns, scaleLowerBound, scaleUpperBound);
+    });
+  };
 
   return (
-    <div>
-      <canvas ref={canvasRef} width={canvasStyle.width} height={canvasStyle.height} />
-			<div>{shape.getArea()}</div>
+    <>
+      <canvas ref={canvasRef} onWheel={handleWheel} />
+      {/* <div>{shape.getArea()}</div>*/}
       <div style={styles.sliderContainer}>
         <div class="slidecontainer" style={{ ...styles.slider }}>
-          <input type="range" min="1" max="100" value={scale * 50} class="slider" id="myRange" onInput={handleInput} />
+          <input
+            type="range"
+            min="1"
+            max="100"
+            value={1 + Math.ceil(99 * ((scale - scaleLowerBound) / scaleRange))}
+            class="slider"
+            id="myRange"
+            onInput={handleInput}
+          />
         </div>
       </div>
-    </div>
-  )
-}
+    </>
+  );
+};
 
 export default Shape;
 
@@ -90,11 +126,11 @@ const styles = {
     alignItems: "center",
     flexDirection: "row",
     justifyContent: "center",
-    width: "100%"
+    width: "100%",
   },
   slider: {
     flex: 1,
     maxWidth: 200,
-    float: "center"
-  }
-}
+    float: "center",
+  },
+};

@@ -2,7 +2,7 @@ import { FunctionalComponent, h, Fragment } from "preact";
 import { useState, useEffect } from "preact/hooks";
 import { route } from "preact-router";
 import Modal from "react-modal";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useAnimationControls } from "framer-motion";
 
 import { IShape, IShapeGroup, ShapeEnum, makeShape } from "src/utils";
 import { useCountdownTimer } from "src/utils/hooks/useCountdownTimer";
@@ -46,34 +46,8 @@ const customStyles = {
 
 Modal.setAppElement("#preact_root");
 
-export const MyComponent = ({ isVisible }) => (
-  <AnimatePresence>
-    {isVisible && (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-      />
-    )}
-  </AnimatePresence>
-);
-
 const numLevels = 10;
 const RegularGame: FunctionalComponent = () => {
-  // const { timeRemaining, actions } = useCountdownTimer(10);
-  // const [currentLevel, setCurrentLevel] = useState<number>(1);
-  // const [score, setScore] = useState<number>(0);
-  // const [gameState, setGameState] = useState<GameStateEnum>(GameStateEnum.Pre);
-
-  // const [shape1, setShape1] = useState<IShape | IShapeGroup>(
-  //   makeShape(ShapeEnum.Rectangle, 1)
-  // );
-  // const [shape2, setShape2] = useState<IShape | IShapeGroup>(
-  //   makeShape(ShapeEnum.Circle, 3)
-  // );
-
-  // const renderLevel = () => {};
-
   const formatPercent = (tr: number) => {
     return tr / (10 * 1000);
   };
@@ -81,31 +55,6 @@ const RegularGame: FunctionalComponent = () => {
   const formatDisplayNum = (tr: number) => {
     return Math.ceil((tr - 1) / 1000);
   };
-
-  // const scoreLevel = (diff: number) => {
-  //   setScore((s) => {
-  //     console.log(Math.max(1000 - diff, 0));
-  //     return Math.ceil(s + Math.max(1000 - diff, 0));
-  //   });
-  // };
-
-  // const handleNext = () => {
-  //   //let diff = area1 - area2;
-  //   let diff = Math.abs(shape1.getArea() - shape2.getArea());
-  //   console.log(shape1.getArea(), shape2.getArea(), diff);
-
-  //   scoreLevel(diff);
-
-  //   setShape1(makeShape(ShapeEnum.Rectangle));
-  //   setShape2(makeShape(ShapeEnum.Circle));
-
-  //   if (currentLevel === numLevels) {
-  //     console.log("HERE");
-  //     setGameState(GameStateEnum.Post);
-  //     return;
-  //   }
-  //   setCurrentLevel((n) => n + 1);
-  // };
 
   const {
     start,
@@ -120,6 +69,18 @@ const RegularGame: FunctionalComponent = () => {
     gameState,
     setGameState,
   } = useGame(GameTypeEnum.Regular);
+
+  const controls = useAnimationControls();
+
+  useEffect(() => {
+    if (prevLevelScore > -1) {
+      controls.set({ opacity: 1 });
+      controls.start({
+        opacity: 0,
+        transition: { duration: 2 },
+      });
+    }
+  }, [prevLevelScore]);
 
   const closePreModal = () => {
     setGameState(GameStateEnum.Playing);
@@ -188,7 +149,9 @@ const RegularGame: FunctionalComponent = () => {
             <h1 style={{ ...styles.headerText }}>area game</h1>
           </div>
         </div>
-        <div style={styles.gameContainer}>
+        <div
+          style={{ ...styles.gameContainer, width: "100%", maxHeight: "70%" }}
+        >
           <div
             style={{
               ...styles.rowContainer,
@@ -221,39 +184,42 @@ const RegularGame: FunctionalComponent = () => {
                 {score}
 								</text> */}
               <Counter
-                style={{ ...styles.scoreText, ...styles.shadowedText }}
+                style={{ ...styles.scoreText }}
                 from={prevScore}
                 to={score}
               />
-              <motion.div
+              {/* <motion.div
                 initial={{ opacity: 1 }}
                 animate={{ opacity: 0 }}
                 transition={{ duration: 4 }}
-              >
-                <div>{prevLevelScore}</div>
+              >*/}
+              <motion.div animate={controls} initial={{ opacity: 0 }}>
+                <div>+{prevLevelScore.toFixed(0)}</div>
               </motion.div>
             </div>
           </div>
 
           <Level level={currentLevel} shape1={shape1} shape2={shape2} />
-
+        </div>
+        {/* BOTTOM */}
+        <div
+          style={{
+            marginTop: 50,
+            marginBottom: 50,
+            ...styles.rowContainer,
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
           <div
             style={{
-              marginTop: 30,
-              ...styles.rowContainer,
-              justifyContent: "space-between",
-              alignItems: "center",
+              fontSize: 20,
+              fontWeight: "bold",
             }}
           >
-            <div
-              style={{
-                fontSize: 20,
-                fontWeight: "bold",
-              }}
-            >
-              level {currentLevel}
-            </div>
-            {/* <div
+            level {currentLevel}
+          </div>
+          {/* <div
               style={{
                 display: "flex",
                 flexDirection: "column",
@@ -287,13 +253,12 @@ const RegularGame: FunctionalComponent = () => {
                 10
               </div>
             </div>*/}
-            <div style={{ flex: 1, textAlign: "right", float: "right" }}>
-              <BoxButton
-                onClick={goNextLevel}
-                title="next ->"
-                style={{ width: 220, fontSize: 24 }}
-              />
-            </div>
+          <div style={{ textAlign: "right", float: "right" }}>
+            <BoxButton
+              onClick={goNextLevel}
+              title="next ->"
+              style={{ width: 220, fontSize: 24 }}
+            />
           </div>
         </div>
       </div>
@@ -313,7 +278,7 @@ const styles = {
     color: colors.white,
   },
   shadowedText: {
-    textShadow: "2px 2px #F68888",
+    // textShadow: "2px 2px #F68888",
   },
   scoreText: {
     fontSize: "30px",
@@ -323,7 +288,9 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    maxWidth: "50%",
+    // maxWidth: "50%",
+    maxWidth: "800px",
+    width: "100%",
     height: "100%",
   },
   rowContainer: {
