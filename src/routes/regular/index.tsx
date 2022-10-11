@@ -1,7 +1,8 @@
-import { FunctionalComponent, h } from "preact";
+import { FunctionalComponent, h, Fragment } from "preact";
 import { useState, useEffect } from "preact/hooks";
+import { route } from "preact-router";
 import Modal from "react-modal";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 import { IShape, IShapeGroup, ShapeEnum, makeShape } from "src/utils";
 import { useCountdownTimer } from "src/utils/hooks/useCountdownTimer";
@@ -12,6 +13,7 @@ import BoxButton from "src/components/boxbutton";
 import { useGame } from "src/utils/hooks/useGame";
 import { GameTypeEnum } from "src/utils/types";
 import Counter from "src/components/counter";
+import { colors } from "src/style";
 
 enum GameStateEnum {
   Pre = "PRE",
@@ -27,10 +29,34 @@ const customStyles = {
     bottom: "auto",
     marginRight: "-50%",
     transform: "translate(-50%, -50%)",
+    background: colors.background,
+    height: "80%",
+    width: "80%",
+    maxHeight: "800px",
+    maxWidth: "600px",
+    opacity: 1,
+
+    color: colors.white,
+    border: `2px solid ${colors.white}`,
+  },
+  overlay: {
+    background: "rgba(41,41,41,0.5)",
   },
 };
 
 Modal.setAppElement("#preact_root");
+
+export const MyComponent = ({ isVisible }) => (
+  <AnimatePresence>
+    {isVisible && (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+      />
+    )}
+  </AnimatePresence>
+);
 
 const numLevels = 10;
 const RegularGame: FunctionalComponent = () => {
@@ -102,10 +128,11 @@ const RegularGame: FunctionalComponent = () => {
 
   const closePostModal = () => {
     // setGameState(GameStateEnum.Playing);
+    route("/");
   };
 
   return (
-    <div style={styles.mainContainer}>
+    <div style={{ ...styles.mainContainer, justifyContent: "center" }}>
       <Modal
         isOpen={gameState === GameStateEnum.Pre}
         // onAfterOpen={afterOpenModal}
@@ -113,12 +140,29 @@ const RegularGame: FunctionalComponent = () => {
         style={customStyles}
         contentLabel="Example Modal"
       >
-        <h1> Regular Game</h1>
-        <p>
-          You have ten rounds to get the highest score possible! Adjust the
-          sliders below the shapes the match their areas.
-        </p>
-        <button onClick={closePreModal}>Start</button>
+        <div
+          style={{
+            ...styles.mainContainer,
+            justifyContent: "space-between",
+            alignItems: "flex-start",
+          }}
+        >
+          <h1>regular game</h1>
+          <div style={{ flex: 1 }}>
+            <p>
+              You have ten rounds to get the highest score possible! Adjust the
+              sliders below the shapes the match their areas.
+            </p>
+          </div>
+
+          <div style={{ alignSelf: "flex-end" }}>
+            <BoxButton
+              onClick={closePreModal}
+              title="start"
+              style={{ width: 180, fontSize: 24 }}
+            />
+          </div>
+        </div>
       </Modal>
       <Modal
         isOpen={gameState === GameStateEnum.Post}
@@ -127,15 +171,21 @@ const RegularGame: FunctionalComponent = () => {
         style={customStyles}
         contentLabel="Example Modal"
       >
-        FINISHED
+        <div
+          style={{
+            ...styles.mainContainer,
+            justifyContent: "space-between",
+            alignItems: "flex-start",
+          }}
+        >
+          FINISHED
+        </div>
       </Modal>
 
       <div style={styles.container}>
         <div style={styles.rowContainer}>
           <div style={styles.header}>
-            <h1 style={{ ...styles.shadowedText, ...styles.headerText }}>
-              area game
-            </h1>
+            <h1 style={{ ...styles.headerText }}>area game</h1>
           </div>
         </div>
         <div style={styles.gameContainer}>
@@ -175,7 +225,13 @@ const RegularGame: FunctionalComponent = () => {
                 from={prevScore}
                 to={score}
               />
-              {prevLevelScore > 0 ? <motion.div /> : null}
+              <motion.div
+                initial={{ opacity: 1 }}
+                animate={{ opacity: 0 }}
+                transition={{ duration: 4 }}
+              >
+                <div>{prevLevelScore}</div>
+              </motion.div>
             </div>
           </div>
 
@@ -189,8 +245,15 @@ const RegularGame: FunctionalComponent = () => {
               alignItems: "center",
             }}
           >
-            <div style={{ flex: 1 }}></div>
             <div
+              style={{
+                fontSize: 20,
+                fontWeight: "bold",
+              }}
+            >
+              level {currentLevel}
+            </div>
+            {/* <div
               style={{
                 display: "flex",
                 flexDirection: "column",
@@ -223,12 +286,12 @@ const RegularGame: FunctionalComponent = () => {
               >
                 10
               </div>
-            </div>
-            <div style={{ flex: 1 }}>
+            </div>*/}
+            <div style={{ flex: 1, textAlign: "right", float: "right" }}>
               <BoxButton
                 onClick={goNextLevel}
                 title="next ->"
-                style={{ width: 220, height: 40, fontSize: 30 }}
+                style={{ width: 220, fontSize: 24 }}
               />
             </div>
           </div>
@@ -247,6 +310,7 @@ const styles = {
     alignItems: "center",
     width: "100%",
     height: "100%",
+    color: colors.white,
   },
   shadowedText: {
     textShadow: "2px 2px #F68888",

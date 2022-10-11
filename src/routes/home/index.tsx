@@ -1,8 +1,11 @@
-import { FunctionalComponent, h } from "preact";
+import { FunctionalComponent, h, Fragment } from "preact";
 import { useState, useEffect } from "preact/hooks";
 import { route } from "preact-router";
 
+import { motion } from "framer-motion";
+
 import BoxButton from "src/components/boxbutton";
+import { colors } from "src/style";
 
 const Home: FunctionalComponent = () => {
   const goRegularGame = () => route("/regular");
@@ -10,24 +13,40 @@ const Home: FunctionalComponent = () => {
   const goPracticeGame = () => route("/practice");
 
   return (
-    <div style={styles.mainContainer}>
-      home
-      <BoxButton
-        onClick={goRegularGame}
-        title="regular"
-        style={{ width: 220, height: 40, fontSize: 30 }}
-      />
-      <BoxButton
-        onClick={goRegularGame}
-        title="timed"
-        style={{ width: 220, height: 40, fontSize: 30 }}
-      />
-      <BoxButton
-        onClick={goPracticeGame}
-        title="practice"
-        style={{ width: 220, height: 40, fontSize: 30 }}
-      />
-    </div>
+    <>
+      {/* <motion.div
+        className="box"
+        initial={{ scale: 0.5 }}
+        animate={{ scale: 1.5 }}
+        transition={{ repeat: Infinity, repeatType: "reverse", duration: 8 }}
+      />*/}
+      <div style={styles.mainContainer}>
+        <div style={{}}>
+          <h1 style={{ fontSize: 46 }}>area game</h1>
+        </div>
+
+        <BoxButton
+          onClick={goRegularGame}
+          title="regular"
+          style={{ width: 220, fontSize: 24 }}
+        />
+        <BoxButton
+          onClick={goRegularGame}
+          title="timed"
+          style={{ width: 220, fontSize: 24 }}
+        />
+        <BoxButton
+          onClick={goPracticeGame}
+          title="practice"
+          style={{ width: 220, fontSize: 24 }}
+        />
+        <BoxButton
+          onClick={() => null}
+          title="about"
+          style={{ width: 220, fontSize: 24 }}
+        />
+      </div>
+    </>
   );
 };
 
@@ -38,8 +57,11 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
+    justifyContent: "center",
     width: "100%",
     height: "100%",
+
+    color: colors.white,
   },
   shadowedText: {
     textShadow: "2px 2px #F68888",

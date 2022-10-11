@@ -57,7 +57,7 @@ export default Level;
 
 const style = {
   home: {
-    backgroundColor: "#ebeeed",
+    // backgroundColor: "#ebeeed",
     width: "100%",
   },
   container: {

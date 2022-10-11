@@ -3,7 +3,8 @@ html, body {
 	width: 100%;
 	padding: 0;
 	margin: 0;
-	background: #EFEFEF;
+	/* background: #EFEFEF; */
+	background: #292929;
 	font-family: 'Helvetica Neue', arial, sans-serif;
 	font-weight: 400;
 	color: #444;
@@ -126,5 +127,15 @@ input[type=range]::-ms-fill-upper {
   box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
 }
 input[type=range]:focus::-ms-fill-upper {
+  background: #367ebd;
+}
+
+.box {
+    position: absolute;
+    top: 300;
+    left: 300;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
   background: #367ebd;
 }
