@@ -6,10 +6,10 @@ type Props = { from: number; to: number; style: object };
 
 const Counter = (props: Props) => {
   const { from, to, style } = props;
-  const nodeRef = useRef<HTMLDivElement>();
+  const nodeRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const node: HTMLDivElement | undefined = nodeRef.current;
+    const node: HTMLDivElement | null = nodeRef.current;
     if (!node) return;
 
     const controls = animate(from, to, {
@@ -22,7 +22,7 @@ const Counter = (props: Props) => {
     return () => controls.stop();
   }, [from, to]);
 
-  return <div style={style} ref={nodeRef} />;
+  return <div style={{ ...style }} ref={nodeRef} />;
 };
 
 export default Counter;
