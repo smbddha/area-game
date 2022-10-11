@@ -83,12 +83,10 @@ const Shape: FunctionalComponent<Props> = (props: Props) => {
     let val = e.target.valueAsNumber;
     let s = scaleLowerBound + ((val - 1) / 99) * scaleRange;
 
-    console.log(val, s);
     setScale(s);
   };
 
   const handleWheel = (e: WheelEvent) => {
-    console.log(e);
     let d = e.deltaY;
 
     setScale((s) => {

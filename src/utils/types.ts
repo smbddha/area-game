@@ -1,5 +1,7 @@
 export enum GameTypeEnum {
   Regular = "REGULAR",
+  Practice = "PRACTICE",
+  Timed = "TIMED",
 }
 
 export enum GameStateEnum {

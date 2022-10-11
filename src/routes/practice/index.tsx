@@ -1,12 +1,16 @@
-import { FunctionalComponent, h } from "preact";
-import { useState, useEffect } from "preact/hooks";
+import { FunctionalComponent, h, Fragment } from "preact";
+import { useEffect } from "preact/hooks";
+import { route } from "preact-router";
 import Modal from "react-modal";
+import { motion, useAnimationControls } from "framer-motion";
 
 import Level from "src/components/level";
 import Timer from "src/components/timer";
 import BoxButton from "src/components/boxbutton";
 import { useGame } from "src/utils/hooks/useGame";
 import { GameTypeEnum } from "src/utils/types";
+import Counter from "src/components/counter";
+import { colors } from "src/style";
 
 enum GameStateEnum {
   Pre = "PRE",
@@ -22,22 +26,50 @@ const customStyles = {
     bottom: "auto",
     marginRight: "-50%",
     transform: "translate(-50%, -50%)",
+    background: colors.background,
+    height: "80%",
+    width: "80%",
+    maxHeight: "800px",
+    maxWidth: "600px",
+    opacity: 1,
+
+    color: colors.white,
+    border: `2px solid ${colors.white}`,
+  },
+  overlay: {
+    background: "rgba(41,41,41,0.5)",
   },
 };
 
 Modal.setAppElement("#preact_root");
 
-const RegularGame: FunctionalComponent = () => {
+const PracticeGame: FunctionalComponent = () => {
   const {
     start,
+    restart,
     shape1,
     shape2,
+    prevScore,
     score,
+    prevLevelScore,
+    timeRemaining,
     currentLevel,
     goNextLevel,
     gameState,
     setGameState,
-  } = useGame(GameTypeEnum.Regular);
+  } = useGame(GameTypeEnum.Practice);
+
+  const controls = useAnimationControls();
+
+  useEffect(() => {
+    if (prevLevelScore > -1) {
+      controls.set({ opacity: 1 });
+      controls.start({
+        opacity: 0,
+        transition: { duration: 2 },
+      });
+    }
+  }, [prevLevelScore]);
 
   const closePreModal = () => {
     setGameState(GameStateEnum.Playing);
@@ -46,10 +78,21 @@ const RegularGame: FunctionalComponent = () => {
 
   const closePostModal = () => {
     // setGameState(GameStateEnum.Playing);
+    goHome();
   };
 
+  const replayGame = () => {
+    restart();
+  };
+
+  const handleExit = () => {
+    setGameState(GameStateEnum.Post);
+  };
+
+  const goHome = () => route("/");
+
   return (
-    <div style={styles.mainContainer}>
+    <div style={{ ...styles.mainContainer, justifyContent: "center" }}>
       <Modal
         isOpen={gameState === GameStateEnum.Pre}
         // onAfterOpen={afterOpenModal}
@@ -57,9 +100,29 @@ const RegularGame: FunctionalComponent = () => {
         style={customStyles}
         contentLabel="Example Modal"
       >
-        <h1>* Practice *</h1>
-        <p>Endless levels to hone your area-matching skills!</p>
-        <button onclick={closePreModal}>Start</button>
+        <div
+          style={{
+            ...styles.mainContainer,
+            justifyContent: "space-between",
+            alignItems: "flex-start",
+          }}
+        >
+          <h1>practice</h1>
+          <div style={{ flex: 1 }}>
+            <p>
+              No pressure ! Play as many rounds as you want. Each level has
+              randomly generated shapes. See how accurate you can get !
+            </p>
+          </div>
+
+          <div style={{ alignSelf: "flex-end" }}>
+            <BoxButton
+              onClick={closePreModal}
+              title="start"
+              style={{ width: 180, fontSize: 24 }}
+            />
+          </div>
+        </div>
       </Modal>
       <Modal
         isOpen={gameState === GameStateEnum.Post}
@@ -68,26 +131,63 @@ const RegularGame: FunctionalComponent = () => {
         style={customStyles}
         contentLabel="Example Modal"
       >
-        {/* TODO show stats on the finished modal */}
-        FINISHED
+        <div
+          style={{
+            ...styles.mainContainer,
+            justifyContent: "space-between",
+            alignItems: "center",
+            paddingTop: "50px",
+          }}
+        >
+          <h1>Final Score</h1>
+          <div style={{ flex: 1 }}>
+            <h1 style={{ fontSize: "90px" }}>{score}</h1>
+          </div>
+
+          <div
+            style={{
+              fontSize: "36px",
+              flex: 1,
+            }}
+          >
+            {/* TODO display average score */}
+            {/*finishedScoreMessage() */}
+          </div>
+
+          <div style={{ alignSelf: "flex-end" }}>
+            <BoxButton
+              onClick={replayGame}
+              title="restart"
+              style={{ width: 180, fontSize: 24 }}
+            />
+          </div>
+        </div>
       </Modal>
 
       <div style={styles.container}>
         <div style={styles.rowContainer}>
           <div style={styles.header}>
-            <h1 style={{ ...styles.shadowedText, ...styles.headerText }}>
+            <h1 style={{ ...styles.headerText }} onClick={goHome}>
               area game
             </h1>
           </div>
         </div>
-        <div style={styles.gameContainer}>
+        <div
+          style={{ ...styles.gameContainer, width: "100%", maxHeight: "70%" }}
+        >
           <div
             style={{
               ...styles.rowContainer,
               alignItems: "right",
               justifyContent: "flex-end",
+              fontSize: "32px",
+              fontWeight: "bold",
             }}
-          ></div>
+            onClick={handleExit}
+            title="exit"
+          >
+            x
+          </div>
           <div
             style={{
               ...styles.rowContainer,
@@ -103,66 +203,46 @@ const RegularGame: FunctionalComponent = () => {
                 justifyContent: "space-between",
               }}
             >
-              {/* <text>your score</text>
-              <text style={{ ...styles.scoreText, ...styles.shadowedText }}>
-                {score}
-              </text>
-							 */}
+              <text>your score</text>
+              <Counter
+                style={{ ...styles.scoreText }}
+                from={prevScore}
+                to={score}
+              />
+              <motion.div animate={controls} initial={{ opacity: 0 }}>
+                <div>+{prevLevelScore.toFixed(0)}</div>
+              </motion.div>
             </div>
           </div>
 
           <Level level={currentLevel} shape1={shape1} shape2={shape2} />
+        </div>
 
+        {/* BOTTOM */}
+
+        <div
+          style={{
+            marginTop: 50,
+            marginBottom: 50,
+            ...styles.rowContainer,
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
           <div
             style={{
-              marginTop: 30,
-              ...styles.rowContainer,
-              justifyContent: "space-between",
-              alignItems: "center",
+              fontSize: 20,
+              fontWeight: "bold",
             }}
           >
-            <div style={{ flex: 1 }}></div>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                fontSize: 20,
-                color: "#393939",
-                fontWeight: "bold",
-                textAlign: "center",
-              }}
-            >
-              <div
-                style={{
-                  textShadow: "1px 1px #F68888",
-                  paddingBottom: 2,
-                }}
-              >
-                {currentLevel}
-              </div>
-              <div
-                style={{
-                  width: "100%",
-                  height: "4px",
-                  background: "#393939",
-                  boxShadow: "1px 1px 0px #F68888",
-                }}
-              ></div>
-              <div
-                style={{
-                  textShadow: "1px 1px #F68888",
-                }}
-              >
-                10
-              </div>
-            </div>
-            <div style={{ flex: 1 }}>
-              <BoxButton
-                onClick={goNextLevel}
-                title="next ->"
-                style={{ width: 220, height: 40, fontSize: 30 }}
-              />
-            </div>
+            level {currentLevel}
+          </div>
+          <div style={{ textAlign: "right", float: "right" }}>
+            <BoxButton
+              onClick={goNextLevel}
+              title="next ->"
+              style={{ width: 220, fontSize: 24 }}
+            />
           </div>
         </div>
       </div>
@@ -179,9 +259,10 @@ const styles = {
     alignItems: "center",
     width: "100%",
     height: "100%",
+    color: colors.white,
   },
   shadowedText: {
-    textShadow: "2px 2px #F68888",
+    // textShadow: "2px 2px #F68888",
   },
   scoreText: {
     fontSize: "30px",
@@ -191,7 +272,9 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    maxWidth: "50%",
+    // maxWidth: "50%",
+    maxWidth: "800px",
+    width: "100%",
     height: "100%",
   },
   rowContainer: {

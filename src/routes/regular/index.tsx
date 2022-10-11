@@ -58,6 +58,7 @@ const RegularGame: FunctionalComponent = () => {
 
   const {
     start,
+    restart,
     shape1,
     shape2,
     prevScore,
@@ -90,6 +91,34 @@ const RegularGame: FunctionalComponent = () => {
   const closePostModal = () => {
     // setGameState(GameStateEnum.Playing);
     route("/");
+  };
+
+  const replayGame = () => {
+    restart();
+  };
+
+  const finishedScoreMessage = () => {
+    if (score > 9000) {
+      return "Wow ! Nearly perfect !";
+    }
+
+    if (score > 7000) {
+      return "Amazing job ! So close.";
+    }
+
+    if (score > 5000) {
+      return "Not bad !";
+    }
+
+    if (score > 3000) {
+      return "A meh performance !";
+    }
+
+    if (score > 1000) {
+      return "Hmm... not so good huh?";
+    }
+
+    return "???";
   };
 
   return (
@@ -136,10 +165,31 @@ const RegularGame: FunctionalComponent = () => {
           style={{
             ...styles.mainContainer,
             justifyContent: "space-between",
-            alignItems: "flex-start",
+            alignItems: "center",
+            paddingTop: "50px",
           }}
         >
-          FINISHED
+          <h1>Final Score</h1>
+          <div style={{ flex: 1 }}>
+            <h1 style={{ fontSize: "90px" }}>{score}</h1>
+          </div>
+
+          <div
+            style={{
+              fontSize: "36px",
+              flex: 1,
+            }}
+          >
+            {finishedScoreMessage()}
+          </div>
+
+          <div style={{ alignSelf: "flex-end" }}>
+            <BoxButton
+              onClick={replayGame}
+              title="restart"
+              style={{ width: 180, fontSize: 24 }}
+            />
+          </div>
         </div>
       </Modal>
 
@@ -180,19 +230,11 @@ const RegularGame: FunctionalComponent = () => {
               }}
             >
               <text>your score</text>
-              {/*<text style={{ ...styles.scoreText, ...styles.shadowedText }}>
-                {score}
-								</text> */}
               <Counter
                 style={{ ...styles.scoreText }}
                 from={prevScore}
                 to={score}
               />
-              {/* <motion.div
-                initial={{ opacity: 1 }}
-                animate={{ opacity: 0 }}
-                transition={{ duration: 4 }}
-              >*/}
               <motion.div animate={controls} initial={{ opacity: 0 }}>
                 <div>+{prevLevelScore.toFixed(0)}</div>
               </motion.div>
@@ -201,7 +243,9 @@ const RegularGame: FunctionalComponent = () => {
 
           <Level level={currentLevel} shape1={shape1} shape2={shape2} />
         </div>
+
         {/* BOTTOM */}
+
         <div
           style={{
             marginTop: 50,
@@ -219,40 +263,6 @@ const RegularGame: FunctionalComponent = () => {
           >
             level {currentLevel}
           </div>
-          {/* <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                fontSize: 20,
-                color: "#393939",
-                fontWeight: "bold",
-                textAlign: "center",
-              }}
-            >
-              <div
-                style={{
-                  textShadow: "1px 1px #F68888",
-                  paddingBottom: 2,
-                }}
-              >
-                {currentLevel}
-              </div>
-              <div
-                style={{
-                  width: "100%",
-                  height: "4px",
-                  background: "#393939",
-                  boxShadow: "1px 1px 0px #F68888",
-                }}
-              ></div>
-              <div
-                style={{
-                  textShadow: "1px 1px #F68888",
-                }}
-              >
-                10
-              </div>
-            </div>*/}
           <div style={{ textAlign: "right", float: "right" }}>
             <BoxButton
               onClick={goNextLevel}
