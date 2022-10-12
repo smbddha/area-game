@@ -1,11 +1,8 @@
 import { FunctionalComponent, h, Fragment } from "preact";
-import { useState, useEffect } from "preact/hooks";
+import { useEffect } from "preact/hooks";
 import { route } from "preact-router";
 import Modal from "react-modal";
-import { motion, AnimatePresence, useAnimationControls } from "framer-motion";
-
-import { IShape, IShapeGroup, ShapeEnum, makeShape } from "src/utils";
-import { useCountdownTimer } from "src/utils/hooks/useCountdownTimer";
+import { motion, useAnimationControls } from "framer-motion";
 
 import Level from "src/components/level";
 import Timer from "src/components/timer";

@@ -5,6 +5,7 @@ import RegularGame from "src/routes/regular";
 import PracticeGame from "src/routes/practice";
 import Home from "src/routes/home";
 import NotFoundPage from "src/routes/notfound";
+import Footer from "./footer";
 
 const App: FunctionalComponent = () => {
   return (
@@ -15,6 +16,7 @@ const App: FunctionalComponent = () => {
         <Route path="/practice" component={PracticeGame} />
         <NotFoundPage default />
       </Router>
+      <Footer />
     </div>
   );
 };
