@@ -5,6 +5,7 @@ import RegularGame from "src/routes/regular";
 import PracticeGame from "src/routes/practice";
 import TimedGame from "src/routes/timed";
 import Home from "src/routes/home";
+import About from "src/routes/about";
 import NotFoundPage from "src/routes/notfound";
 import Footer from "./footer";
 
@@ -21,6 +22,7 @@ const App: FunctionalComponent = () => {
         <Route path="/regular" component={RegularGame} />
         <Route path="/practice" component={PracticeGame} />
         <Route path="/timed" component={TimedGame} />
+        <Route path="/about" component={About} />
         <NotFoundPage default />
       </Router>
       <Footer />

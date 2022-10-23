@@ -18,28 +18,7 @@ enum GameStateEnum {
   Post = "POST",
 }
 
-const customStyles = {
-  content: {
-    top: "50%",
-    left: "50%",
-    right: "auto",
-    bottom: "auto",
-    marginRight: "-50%",
-    transform: "translate(-50%, -50%)",
-    background: colors.background,
-    height: "80%",
-    width: "80%",
-    maxHeight: "800px",
-    maxWidth: "600px",
-    opacity: 1,
 
-    color: colors.white,
-    border: `2px solid ${colors.white}`,
-  },
-  overlay: {
-    background: "rgba(41,41,41,0.5)",
-  },
-};
 
 Modal.setAppElement("#preact_root");
 
@@ -310,4 +289,27 @@ const styles = {
     justifyContent: "top",
   },
   titleText: {},
+};
+
+const customStyles = {
+  content: {
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    transform: "translate(-50%, -50%)",
+    background: colors.background,
+    height: "80%",
+    width: "80%",
+    maxHeight: "800px",
+    maxWidth: "600px",
+    opacity: 1,
+
+    color: colors.white,
+    border: `2px solid ${colors.white}`,
+  },
+  overlay: {
+    background: "rgba(41,41,41,0.5)",
+  },
 };

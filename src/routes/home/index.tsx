@@ -11,6 +11,7 @@ const Home: FunctionalComponent = () => {
   const goRegularGame = () => route("/regular");
   const goTimedGame = () => route("/timed");
   const goPracticeGame = () => route("/practice");
+  const goAbout = () => route("/about");
 
   return (
     <>
@@ -21,7 +22,7 @@ const Home: FunctionalComponent = () => {
         transition={{ repeat: Infinity, repeatType: "reverse", duration: 8 }}
       />*/}
       <div style={styles.mainContainer}>
-        <div style={{}}>
+        <div>
           <h1 style={{ fontSize: 46 }}>area game</h1>
         </div>
 
@@ -41,7 +42,7 @@ const Home: FunctionalComponent = () => {
           style={{ width: 220, fontSize: 24 }}
         />
         <BoxButton
-          onClick={() => null}
+          onClick={goAbout}
           title="about"
           style={{ width: 220, fontSize: 24 }}
         />
@@ -63,38 +64,4 @@ const styles = {
 
     color: colors.white,
   },
-  shadowedText: {
-    textShadow: "2px 2px #F68888",
-  },
-  scoreText: {
-    fontSize: "30px",
-    fontWeight: "bold",
-  },
-  container: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    maxWidth: "50%",
-    height: "100%",
-  },
-  rowContainer: {
-    width: "100%",
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "left",
-  },
-  header: {
-    flex: 1,
-  },
-  headerText: {
-    fontSize: "40px",
-  },
-  gameContainer: {
-    flex: 1,
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "top",
-  },
-  titleText: {},
 };
