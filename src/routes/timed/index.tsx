@@ -43,7 +43,7 @@ const customStyles = {
 
 Modal.setAppElement("#preact_root");
 
-const PracticeGame: FunctionalComponent = () => {
+const TimedGame: FunctionalComponent = () => {
   const {
     start,
     restart,
@@ -57,7 +57,7 @@ const PracticeGame: FunctionalComponent = () => {
     goNextLevel,
     gameState,
     setGameState,
-  } = useGame(GameTypeEnum.Practice);
+  } = useGame(GameTypeEnum.Timed);
 
   const controls = useAnimationControls();
 
@@ -91,6 +91,14 @@ const PracticeGame: FunctionalComponent = () => {
 
   const goHome = () => route("/");
 
+  const formatPercent = (tr: number) => {
+    return tr / (10 * 1000);
+  };
+
+  const formatDisplayNum = (tr: number) => {
+    return Math.ceil((tr - 1) / 1000);
+  };
+
   return (
 			<>
       <Modal
@@ -107,11 +115,10 @@ const PracticeGame: FunctionalComponent = () => {
             alignItems: "flex-start",
           }}
         >
-          <h1>practice</h1>
+          <h1>Timed</h1>
           <div style={{ flex: 1 }}>
             <p>
-              No pressure ! Play as many rounds as you want. Each level has
-              randomly generated shapes. See how accurate you can get !
+			The clock is ticking. You have 60 seconds to get the highest score possible. Get through as many levels as you can before time runs out !
             </p>
           </div>
 
@@ -180,13 +187,13 @@ const PracticeGame: FunctionalComponent = () => {
               ...styles.rowContainer,
               alignItems: "right",
               justifyContent: "flex-end",
-              fontSize: "32px",
-              fontWeight: "bold",
             }}
-            onClick={handleExit}
-            title="exit"
           >
-            x
+
+            <Timer
+              percent={formatPercent(timeRemaining)}
+              displayNum={formatDisplayNum(timeRemaining)}
+            />
           </div>
           <div
             style={{
@@ -250,7 +257,7 @@ const PracticeGame: FunctionalComponent = () => {
   );
 };
 
-export default PracticeGame;
+export default TimedGame;
 
 const styles = {
   mainContainer: {

@@ -3,6 +3,7 @@ import { useRef, useEffect, useState } from "preact/hooks";
 import { colors } from "src/style";
 
 import { IShape, IShapeGroup, clamp } from "src/utils";
+import { randomColor } from "src/utils/colors";
 
 type Props = {
   key: number;
@@ -10,6 +11,7 @@ type Props = {
   canvasStyle: any;
 };
 
+// TODO calculate these scales
 const scaleLowerBound = 0.2;
 const scaleUpperBound = 2.0;
 const scaleRange = scaleUpperBound - scaleLowerBound;
@@ -18,17 +20,12 @@ const scaleRange = scaleUpperBound - scaleLowerBound;
 const DEBUG = false;
 
 const Shape: FunctionalComponent<Props> = (props: Props) => {
-  const {
-    //matchArea,
-    key,
-    shape,
-    canvasStyle,
-  } = props;
+  const { shape } = props;
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>(null);
-  //const [shape, setShape] = useState<IShape | IShapeGroup | null>(makeShape(shapeType, shapeCount));
   const [scale, setScale] = useState<number>(1.0);
+  const [color, _] = useState(randomColor());
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -44,7 +41,6 @@ const Shape: FunctionalComponent<Props> = (props: Props) => {
     if (!context) return;
 
     setCtx(context);
-    //draw();
   }, []);
 
   useEffect(() => {
@@ -63,7 +59,9 @@ const Shape: FunctionalComponent<Props> = (props: Props) => {
     if (!canvasRef.current) return;
 
     ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-    ctx.fillStyle = canvasStyle?.shapeColor || colors.white;
+    // ctx.fillStyle = canvasStyle?.shapeColor || colors.white;
+    ctx.fillStyle = color;
+
     shape.draw(ctx, canvasRef.current.width / 2, canvasRef.current.height / 2);
 
     if (DEBUG) {

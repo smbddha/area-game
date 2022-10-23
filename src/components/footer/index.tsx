@@ -13,10 +13,13 @@ export default Footer;
 
 const styles = {
   footerStyle: {
-    fontWeight: "light",
-    fontSize: 12,
+    margin: "auto",
+    width: "50%",
+    fontWeight: "300",
+    fontSize: 10,
     color: colors.white,
-    position: "absolute",
-    bottom: "20px",
+    textAlign: "center",
+    float: "center",
+			marginBottom: "8px"
   },
 };

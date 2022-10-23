@@ -31,7 +31,7 @@ const Home: FunctionalComponent = () => {
           style={{ width: 220, fontSize: 24 }}
         />
         <BoxButton
-          onClick={goRegularGame}
+          onClick={goTimedGame}
           title="timed"
           style={{ width: 220, fontSize: 24 }}
         />

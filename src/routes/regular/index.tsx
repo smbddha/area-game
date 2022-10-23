@@ -4,12 +4,13 @@ import { route } from "preact-router";
 import Modal from "react-modal";
 import { motion, useAnimationControls } from "framer-motion";
 
+import Counter from "src/components/counter";
 import Level from "src/components/level";
 import Timer from "src/components/timer";
 import BoxButton from "src/components/boxbutton";
+
 import { useGame } from "src/utils/hooks/useGame";
 import { GameTypeEnum } from "src/utils/types";
-import Counter from "src/components/counter";
 import { colors } from "src/style";
 
 enum GameStateEnum {
@@ -87,12 +88,14 @@ const RegularGame: FunctionalComponent = () => {
 
   const closePostModal = () => {
     // setGameState(GameStateEnum.Playing);
-    route("/");
+    goHome();
   };
 
   const replayGame = () => {
     restart();
   };
+
+  const goHome = () => route("/");
 
   const finishedScoreMessage = () => {
     if (score > 9000) {
@@ -119,7 +122,7 @@ const RegularGame: FunctionalComponent = () => {
   };
 
   return (
-    <div style={{ ...styles.mainContainer, justifyContent: "center" }}>
+    <>
       <Modal
         isOpen={gameState === GameStateEnum.Pre}
         // onAfterOpen={afterOpenModal}
@@ -193,7 +196,9 @@ const RegularGame: FunctionalComponent = () => {
       <div style={styles.container}>
         <div style={styles.rowContainer}>
           <div style={styles.header}>
-            <h1 style={{ ...styles.headerText }}>area game</h1>
+            <h1 style={{ ...styles.headerText }} onClick={goHome}>
+              area game
+            </h1>
           </div>
         </div>
         <div
@@ -269,7 +274,7 @@ const RegularGame: FunctionalComponent = () => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

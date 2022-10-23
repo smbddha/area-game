@@ -4,14 +4,7 @@ import { useEffect, useRef } from "preact/hooks";
 import { IShape, IShapeGroup, ShapeEnum, makeShape } from "src/utils";
 
 import Shape from "src/components/shape";
-
-const canvasStyle = {
-  width: 300,
-  height: 500,
-};
-
-const c1 = "#3724db";
-const c2 = "#C8DB24";
+import { randomColor } from "src/utils/colors";
 
 const canvasRatio = 3.0 / 2.0;
 
@@ -26,15 +19,12 @@ const Level: FunctionalComponent<Props> = (props: Props) => {
 
   const shapesContainerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (shapesContainerRef.current) {
-      console.log(
-        shapesContainerRef.current.clientHeight,
-        shapesContainerRef.current.clientWidth
-      );
-    }
-  });
+  // useEffect(() => {
+  //   if (shapesContainerRef.current) {
+  //   }
+  // });
 
+		console.log("rendering");
   return (
     <div style={style.container}>
       <div ref={shapesContainerRef} style={style.shapesContainer}>
@@ -44,8 +34,8 @@ const Level: FunctionalComponent<Props> = (props: Props) => {
             shape={shape1}
             canvasStyle={{
               // ...canvasStyle,
-              backgroundColor: c2,
-              shapeColor: c1,
+              // backgroundColor: c2,
+								// shapeColor: randomColor(),
             }}
           />
         </div>
@@ -55,8 +45,8 @@ const Level: FunctionalComponent<Props> = (props: Props) => {
             shape={shape2}
             canvasStyle={{
               // ...canvasStyle,
-              backgroundColor: c1,
-              shapeColor: c2,
+              // backgroundColor: c1,
+								// shapeColor: randomColor(),
             }}
           />
         </div>

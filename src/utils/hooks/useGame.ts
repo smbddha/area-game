@@ -4,7 +4,8 @@ import { IShapeGroup, makeRandomShapes, makeShape, ShapeEnum } from "../shapes";
 import { GameStateEnum, GameTypeEnum } from "../types";
 import { useCountdownTimer } from "./useCountdownTimer";
 
-const LevelDurationSeconds = 10;
+const RegularDurationSeconds = 10;
+const TimedDurationSeconds = 60;
 
 export const useGame = (gameType: GameTypeEnum) => {
   const [shape1, setShape1] = useState<IShapeGroup>(makeRandomShapes());
@@ -14,10 +15,15 @@ export const useGame = (gameType: GameTypeEnum) => {
   const [score, setScore] = useState<number>(0);
   const [prevScore, setPrevScore] = useState<number>(0);
   const [prevLevelScore, setPrevLevelScore] = useState<number>(-1);
-
-  const { timeRemaining, actions } = useCountdownTimer(
-    gameType === GameTypeEnum.Regular ? LevelDurationSeconds : 0
+  const [levelDurationSeconds, _] = useState<number>(
+    gameType === GameTypeEnum.Regular
+      ? RegularDurationSeconds
+      : gameType === GameTypeEnum.Timed
+      ? TimedDurationSeconds
+      : 0
   );
+
+  const { timeRemaining, actions } = useCountdownTimer(levelDurationSeconds);
   const [currentLevel, setCurrentLevel] = useState<number>(1);
 
   // TODO change for different gametypes
@@ -42,9 +48,9 @@ export const useGame = (gameType: GameTypeEnum) => {
   };
 
   const start = () => {
-    if (gameType === GameTypeEnum.Regular) {
+    if (gameType === GameTypeEnum.Regular || gameType === GameTypeEnum.Timed) {
       actions.reset();
-      actions.start(LevelDurationSeconds);
+      actions.start(levelDurationSeconds);
     }
   };
 
@@ -68,8 +74,10 @@ export const useGame = (gameType: GameTypeEnum) => {
 
     // actually do the delay here
 
-    if (currentLevel === numLevels) {
+    console.log("NEXT LEVEL");
+    if (currentLevel >= numLevels) {
       setGameState(GameStateEnum.Post);
+      console.log("DONE");
       return;
     }
     setCurrentLevel((n) => n + 1);
@@ -78,22 +86,27 @@ export const useGame = (gameType: GameTypeEnum) => {
     setShape1(makeRandomShapes());
     setShape2(makeRandomShapes());
 
-    start();
+    if (gameType === GameTypeEnum.Regular) {
+      start();
+    }
   };
 
   useEffect(() => {
     if (timeRemaining <= 0) {
-      console.log("NO TIME REMAINING");
-
       // TODO add some sort of delay here
       // user should be able to see their score appear + be added
       // to their total and see the actual areas of the shapes for
       // a second
 
+      if (gameType === GameTypeEnum.Timed) {
+        setGameState(GameStateEnum.Post);
+      }
+
       goNextLevel();
     }
 
-    if (currentLevel === numLevels) {
+    if (currentLevel > numLevels) {
+      // console.log("HERE", currentLevel)
       actions.reset();
       actions.pause();
     }
