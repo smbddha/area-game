@@ -18,8 +18,6 @@ enum GameStateEnum {
   Post = "POST",
 }
 
-
-
 Modal.setAppElement("#preact_root");
 
 const TimedGame: FunctionalComponent = () => {
@@ -79,7 +77,7 @@ const TimedGame: FunctionalComponent = () => {
   };
 
   return (
-			<>
+    <>
       <Modal
         isOpen={gameState === GameStateEnum.Pre}
         // onAfterOpen={afterOpenModal}
@@ -97,7 +95,9 @@ const TimedGame: FunctionalComponent = () => {
           <h1>Timed</h1>
           <div style={{ flex: 1 }}>
             <p>
-			The clock is ticking. You have 60 seconds to get the highest score possible. Get through as many levels as you can before time runs out !
+              The clock is ticking. You have 60 seconds to get the highest score
+              possible. Get through as many levels as you can before time runs
+              out !
             </p>
           </div>
 
@@ -140,12 +140,29 @@ const TimedGame: FunctionalComponent = () => {
             {/*finishedScoreMessage() */}
           </div>
 
-          <div style={{ alignSelf: "flex-end" }}>
-            <BoxButton
-              onClick={replayGame}
-              title="restart"
-              style={{ width: 180, fontSize: 24 }}
-            />
+          <div>
+            {/* TODO style the exit button better (red background) */}
+            <div style={{ alignSelf: "flex-start" }}>
+              <BoxButton
+                onClick={goHome}
+                title="exit"
+                style={{ width: 180, fontSize: 24 }}
+              />
+            </div>
+            <div style={{ alignSelf: "flex-end" }}>
+              <BoxButton
+                onClick={replayGame}
+                title="restart"
+                style={{ width: 180, fontSize: 24 }}
+              />
+            </div>
+            <div style={{ alignSelf: "flex-end" }}>
+              <BoxButton
+                onClick={replayGame}
+                title="restart"
+                style={{ width: 180, fontSize: 24 }}
+              />
+            </div>
           </div>
         </div>
       </Modal>
@@ -168,7 +185,6 @@ const TimedGame: FunctionalComponent = () => {
               justifyContent: "flex-end",
             }}
           >
-
             <Timer
               percent={formatPercent(timeRemaining)}
               displayNum={formatDisplayNum(timeRemaining)}
