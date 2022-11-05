@@ -7,7 +7,7 @@ import { randomColor } from "src/utils/colors";
 
 type Props = {
   key: number;
-  shape: IShape | IShapeGroup;
+  shape: IShapeGroup;
   canvasStyle: any;
 };
 
@@ -16,7 +16,7 @@ const scaleLowerBound = 0.2;
 const scaleUpperBound = 2.0;
 const scaleRange = scaleUpperBound - scaleLowerBound;
 
-// const DEBUG = true;
+// const DEBUG = true; // displays the areas over the shapes
 const DEBUG = false;
 
 const Shape: FunctionalComponent<Props> = (props: Props) => {
@@ -25,6 +25,7 @@ const Shape: FunctionalComponent<Props> = (props: Props) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>(null);
   const [scale, setScale] = useState<number>(1.0);
+  const [scaleRange, setScaleRange] = useState<number>(1.9);
   const [color, _] = useState(randomColor());
 
   useEffect(() => {
@@ -40,6 +41,7 @@ const Shape: FunctionalComponent<Props> = (props: Props) => {
     const context = canvas.getContext("2d");
     if (!context) return;
 
+    setScaleRange(shape.getMaxScale(canvas.width, canvas.height));
     setCtx(context);
   }, []);
 

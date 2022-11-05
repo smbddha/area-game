@@ -8,12 +8,14 @@ export interface IShape {
   getArea: () => number;
   scale: (s: number) => void;
   randomize: (range: { low: number; high: number }) => void;
+  getHeightDim: () => number;
 }
 
-export interface IShapeGroup extends IShape {
+export interface IShapeGroup extends Omit<IShape, "getHeightDim"> {
   shapes: IShape[];
   //draw: (ctx: CanvasRenderingContext2D, x?: number, y?: number) => void;
   getArea: () => number;
+  getMaxScale: (w: number, h: number) => number;
 }
 
 export enum ShapeEnum {
@@ -52,6 +54,15 @@ export class ShapeGroup implements IShapeGroup {
       let ny = ystep * (i + 1);
       this.shapes[i].draw(ctx, nx, ny);
     }
+  }
+
+  getMaxScale(w: number, h: number) {
+    let shapeh = h / this.shapes.length;
+
+    let scale = this.shapes
+      .map((s) => shapeh / s.getHeightDim())
+      .reduce((a, b) => Math.min(a, b));
+    return scale;
   }
 
   getArea() {
@@ -99,6 +110,10 @@ export class Circle implements IShape {
     return Math.PI * (sr * sr);
   }
 
+  getHeightDim() {
+    return this.dims.r * 2;
+  }
+
   scale(s: number) {
     this.s = s;
   }
@@ -142,6 +157,10 @@ export class Rectangle implements IShape {
 
   getArea() {
     return this.dims.w * this.s * (this.dims.h * this.s);
+  }
+
+  getHeightDim() {
+    return this.dims.h;
   }
 
   scale(s: number) {
@@ -194,6 +213,10 @@ export class Triangle implements IShape {
     return 0.5 * this.dims.b * this.dims.h * this.s;
   }
 
+  getHeightDim() {
+    return this.dims.h;
+  }
+
   scale(s: number) {
     this.s = s;
   }
@@ -205,15 +228,6 @@ export class Triangle implements IShape {
     });
   }
 }
-
-// function randomEnum<T>(anEnum: T): T[keyof T] {
-//     const enumValues = Object.values(anEnum)
-//         .map(n => +n)
-//         .filter(n => !Number.isNaN(n)) as unknown as T[keyof T][]
-//     const randomIndex = Math.floor(Math.random() * enumValues.length)
-//     const randomEnumValue = enumValues[randomIndex]
-//     return randomEnumValue;
-// }
 
 function sample<T>(arr: T[]) {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -234,7 +248,7 @@ export const makeRandomShapes = (maxShapes: number = 3): IShapeGroup => {
   return new ShapeGroup(shapes);
 };
 
-export const makeShape = (shapeType: ShapeEnum): IShape | IShapeGroup => {
+export const makeShape = (shapeType: ShapeEnum): IShape => {
   let shape: IShape = new Circle(0);
 
   switch (shapeType) {

@@ -127,7 +127,7 @@ const RegularGame: FunctionalComponent = () => {
         isOpen={gameState === GameStateEnum.Pre}
         // onAfterOpen={afterOpenModal}
         onRequestClose={closePreModal}
-        style={customStyles}
+        style={styles}
         contentLabel="Example Modal"
       >
         <div
@@ -191,15 +191,27 @@ const RegularGame: FunctionalComponent = () => {
             />
           )}
 
-          <div style={{ alignSelf: "flex-end" }}>
-            <BoxButton
-              onClick={replayGame}
-              title="restart"
-              style={{ width: 180, fontSize: 24 }}
-            />
+          <div>
+            {/* TODO style the exit button better (red background) */}
+            <div style={{ alignSelf: "flex-start" }}>
+              <BoxButton
+                onClick={goHome}
+                title="exit"
+                style={{ width: 180, fontSize: 24 }}
+              />
+            </div>
+            <div style={{ alignSelf: "flex-end" }}>
+              <BoxButton
+                onClick={replayGame}
+                title="restart"
+                style={{ width: 180, fontSize: 24 }}
+              />
+            </div>
           </div>
         </div>
       </Modal>
+
+      {/* ----- END MODALS ----- */}
 
       <div style={styles.container}>
         <div style={styles.rowContainer}>
@@ -344,6 +356,26 @@ const styles = {
     // justifyContent: "flex-start",
   },
   titleText: {},
+  content: {
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    transform: "translate(-50%, -50%)",
+    background: colors.background,
+    height: "80%",
+    width: "80%",
+    maxHeight: "800px",
+    maxWidth: "600px",
+    opacity: 1,
+
+    color: colors.white,
+    border: `2px solid ${colors.white}`,
+  },
+  overlay: {
+    background: "rgba(41,41,41,0.5)",
+  },
 };
 
 // for modals
