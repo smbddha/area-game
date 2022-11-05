@@ -20,14 +20,14 @@ const Timer = (props: Props) => {
           height: 22,
           width: w,
           alignContent: "right",
-          float: "right",
+          // float: "right",
         }}
       >
         <div
           style={{
             height: 22,
             marginTop: "28px",
-            float: "right",
+            // float: "right",
             fontSize: "20px",
             fontWeight: "bold",
             color: percent < 0.31 ? "#CA5252" : "#8BB447",

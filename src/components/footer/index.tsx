@@ -19,7 +19,6 @@ const styles = {
     fontSize: 10,
     color: colors.white,
     textAlign: "center",
-    float: "center",
-			marginBottom: "8px"
+    marginBottom: "8px",
   },
 };

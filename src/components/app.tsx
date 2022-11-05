@@ -1,5 +1,6 @@
 import { FunctionalComponent, h } from "preact";
 import { Route, Router } from "preact-router";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import RegularGame from "src/routes/regular";
 import PracticeGame from "src/routes/practice";
@@ -11,20 +12,24 @@ import Footer from "./footer";
 
 import { colors } from "src/style";
 
+const queryClient = new QueryClient();
+
 const App: FunctionalComponent = () => {
   return (
     <div
       id="preact_root"
       style={{ ...styles.mainContainer, justifyContent: "center" }}
     >
-      <Router>
-        <Route path="/" component={Home} />
-        <Route path="/regular" component={RegularGame} />
-        <Route path="/practice" component={PracticeGame} />
-        <Route path="/timed" component={TimedGame} />
-        <Route path="/about" component={About} />
-        <NotFoundPage default />
-      </Router>
+      <QueryClientProvider client={queryClient}>
+        <Router>
+          <Route path="/" component={Home} />
+          <Route path="/regular" component={RegularGame} />
+          <Route path="/practice" component={PracticeGame} />
+          <Route path="/timed" component={TimedGame} />
+          <Route path="/about" component={About} />
+          <NotFoundPage default />
+        </Router>
+      </QueryClientProvider>
       <Footer />
     </div>
   );

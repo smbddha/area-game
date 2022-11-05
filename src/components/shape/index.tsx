@@ -128,6 +128,5 @@ const styles = {
   slider: {
     flex: 1,
     maxWidth: 200,
-    float: "center",
   },
 };

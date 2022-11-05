@@ -9,9 +9,13 @@ import Level from "src/components/level";
 import Timer from "src/components/timer";
 import BoxButton from "src/components/boxbutton";
 
+import { createScore } from "src/api";
 import { useGame } from "src/utils/hooks/useGame";
 import { GameTypeEnum } from "src/utils/types";
 import { colors } from "src/style";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
+import Leaderboard from "src/components/leaderboard";
 
 enum GameStateEnum {
   Pre = "PRE",
@@ -19,32 +23,14 @@ enum GameStateEnum {
   Post = "POST",
 }
 
-const customStyles = {
-  content: {
-    top: "50%",
-    left: "50%",
-    right: "auto",
-    bottom: "auto",
-    marginRight: "-50%",
-    transform: "translate(-50%, -50%)",
-    background: colors.background,
-    height: "80%",
-    width: "80%",
-    maxHeight: "800px",
-    maxWidth: "600px",
-    opacity: 1,
-
-    color: colors.white,
-    border: `2px solid ${colors.white}`,
-  },
-  overlay: {
-    background: "rgba(41,41,41,0.5)",
-  },
-};
-
 Modal.setAppElement("#preact_root");
 
-const numLevels = 10;
+type ScoreDto = {
+  username: string;
+  score: number;
+  gameType: GameTypeEnum;
+};
+
 const RegularGame: FunctionalComponent = () => {
   const formatPercent = (tr: number) => {
     return tr / (10 * 1000);
@@ -53,6 +39,10 @@ const RegularGame: FunctionalComponent = () => {
   const formatDisplayNum = (tr: number) => {
     return Math.ceil((tr - 1) / 1000);
   };
+
+  const mutation = useMutation({
+    mutationFn: createScore,
+  });
 
   const {
     start,
@@ -80,6 +70,16 @@ const RegularGame: FunctionalComponent = () => {
       });
     }
   }, [prevLevelScore]);
+
+  useEffect(() => {
+    if (gameState === GameStateEnum.Post) {
+      mutation.mutate({
+        score,
+        gameType: GameTypeEnum.Regular,
+        username: "anon",
+      });
+    }
+  }, [gameState]);
 
   const closePreModal = () => {
     setGameState(GameStateEnum.Playing);
@@ -166,22 +166,30 @@ const RegularGame: FunctionalComponent = () => {
             ...styles.mainContainer,
             justifyContent: "space-between",
             alignItems: "center",
-            paddingTop: "50px",
+            // paddingTop: "2rem",
           }}
         >
-          <h1>Final Score</h1>
-          <div style={{ flex: 1 }}>
-            <h1 style={{ fontSize: "90px" }}>{score}</h1>
+          <div style={{ ...styles.rowContainer }}>
+            <h1>Final Score</h1>
+            <div style={{ flex: 1, textAlign: "center " }}>
+              <h1 style={{ fontSize: "3em" }}>{score}</h1>
+            </div>
           </div>
 
           <div
             style={{
               fontSize: "36px",
-              flex: 1,
+              // flex: 1,
             }}
           >
             {finishedScoreMessage()}
           </div>
+          {mutation.isSuccess && (
+            <Leaderboard
+              scoreId={mutation.data.data.id}
+              gameType={GameTypeEnum.Regular}
+            />
+          )}
 
           <div style={{ alignSelf: "flex-end" }}>
             <BoxButton
@@ -207,7 +215,7 @@ const RegularGame: FunctionalComponent = () => {
           <div
             style={{
               ...styles.rowContainer,
-              alignItems: "right",
+              alignItems: "flex-end",
               justifyContent: "flex-end",
             }}
           >
@@ -265,7 +273,7 @@ const RegularGame: FunctionalComponent = () => {
           >
             level {currentLevel}
           </div>
-          <div style={{ textAlign: "right", float: "right" }}>
+          <div style={{ textAlign: "right" }}>
             <BoxButton
               onClick={goNextLevel}
               title="next ->"
@@ -289,6 +297,11 @@ const styles = {
     height: "100%",
     color: colors.white,
   },
+  // rowContainer: {
+  //   display: "flex",
+  //   flexDirection: "column",
+  //   width: "100%",
+  // },
   shadowedText: {
     // textShadow: "2px 2px #F68888",
   },
@@ -309,7 +322,7 @@ const styles = {
     width: "100%",
     display: "flex",
     flexDirection: "row",
-    alignItems: "left",
+    alignItems: "flex-start",
   },
   columnContainer: {
     // width: "100%",
@@ -328,7 +341,31 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    justifyContent: "top",
+    // justifyContent: "flex-start",
   },
   titleText: {},
+};
+
+// for modals
+const customStyles = {
+  content: {
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    transform: "translate(-50%, -50%)",
+    background: colors.background,
+    height: "80%",
+    width: "80%",
+    maxHeight: "800px",
+    maxWidth: "600px",
+    opacity: 1,
+
+    color: colors.white,
+    border: `2px solid ${colors.white}`,
+  },
+  overlay: {
+    background: "rgba(41,41,41,0.5)",
+  },
 };
