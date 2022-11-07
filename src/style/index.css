@@ -139,3 +139,20 @@ input[type=range]:focus::-ms-fill-upper {
   border-radius: 50%;
   background: #367ebd;
 }
+
+input[type=text] {
+    background: none;
+    border: none;
+    outline: none;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    color: inherit;
+}
+
+input[type=text]:active,
+input[type=text]:focus {
+    background: none;
+    border: none;
+    outline: none;
+}

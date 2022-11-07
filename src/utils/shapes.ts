@@ -9,6 +9,7 @@ export interface IShape {
   scale: (s: number) => void;
   randomize: (range: { low: number; high: number }) => void;
   getHeightDim: () => number;
+  getWidthDim: () => number;
 }
 
 export interface IShapeGroup extends Omit<IShape, "getHeightDim"> {
@@ -59,10 +60,16 @@ export class ShapeGroup implements IShapeGroup {
   getMaxScale(w: number, h: number) {
     let shapeh = h / this.shapes.length;
 
-    let scale = this.shapes
+    let hscale = this.shapes
       .map((s) => shapeh / s.getHeightDim())
       .reduce((a, b) => Math.min(a, b));
-    return scale;
+
+    let wscale = this.shapes
+      .map((s) => w / s.getWidthDim())
+      .reduce((a, b) => Math.min(a, b));
+
+    console.log("SCALES", hscale, wscale);
+    return Math.min(hscale, wscale);
   }
 
   getArea() {
@@ -111,6 +118,10 @@ export class Circle implements IShape {
   }
 
   getHeightDim() {
+    return this.dims.r * 2;
+  }
+
+  getWidthDim() {
     return this.dims.r * 2;
   }
 
@@ -163,6 +174,10 @@ export class Rectangle implements IShape {
     return this.dims.h;
   }
 
+  getWidthDim() {
+    return this.dims.w;
+  }
+
   scale(s: number) {
     this.s = s;
   }
@@ -210,11 +225,15 @@ export class Triangle implements IShape {
   }
 
   getArea() {
-    return 0.5 * this.dims.b * this.dims.h * this.s;
+    return 0.5 * (this.dims.b * this.s) * (this.dims.h * this.s);
   }
 
   getHeightDim() {
     return this.dims.h;
+  }
+
+  getWidthDim() {
+    return this.dims.b;
   }
 
   scale(s: number) {

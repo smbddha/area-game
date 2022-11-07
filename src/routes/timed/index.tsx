@@ -11,6 +11,9 @@ import { useGame } from "src/utils/hooks/useGame";
 import { GameTypeEnum } from "src/utils/types";
 import Counter from "src/components/counter";
 import { colors } from "src/style";
+import { useMutation } from "@tanstack/react-query";
+import Leaderboard from "src/components/leaderboard";
+import { createScore } from "src/api";
 
 enum GameStateEnum {
   Pre = "PRE",
@@ -35,6 +38,20 @@ const TimedGame: FunctionalComponent = () => {
     gameState,
     setGameState,
   } = useGame(GameTypeEnum.Timed);
+
+  const mutation = useMutation({
+    mutationFn: createScore,
+  });
+
+  useEffect(() => {
+    if (gameState === GameStateEnum.Post) {
+      mutation.mutate({
+        score,
+        gameType: GameTypeEnum.Timed,
+        username: "anon",
+      });
+    }
+  }, [gameState]);
 
   const controls = useAnimationControls();
 
@@ -122,37 +139,37 @@ const TimedGame: FunctionalComponent = () => {
             ...styles.mainContainer,
             justifyContent: "space-between",
             alignItems: "center",
-            paddingTop: "50px",
+            // paddingTop: "2rem",
           }}
         >
-          <h1>Final Score</h1>
-          <div style={{ flex: 1 }}>
-            <h1 style={{ fontSize: "90px" }}>{score}</h1>
+          <div style={{ ...styles.rowContainer }}>
+            <h1>Final Score</h1>
+            <div style={{ flex: 1, textAlign: "center " }}>
+              <h1 style={{ fontSize: "3em" }}>{score}</h1>
+            </div>
           </div>
 
           <div
             style={{
               fontSize: "36px",
-              flex: 1,
+              // flex: 1,
             }}
-          >
-            {/* TODO display average score */}
-            {/*finishedScoreMessage() */}
-          </div>
+          ></div>
+          {mutation.isSuccess && (
+            <Leaderboard
+              scoreId={mutation.data.data.data.id}
+              gameType={GameTypeEnum.Timed}
+            />
+          )}
 
-          <div>
+          <div
+            style={{ ...styles.rowContainer, justifyContent: "space-between" }}
+          >
             {/* TODO style the exit button better (red background) */}
             <div style={{ alignSelf: "flex-start" }}>
               <BoxButton
                 onClick={goHome}
                 title="exit"
-                style={{ width: 180, fontSize: 24 }}
-              />
-            </div>
-            <div style={{ alignSelf: "flex-end" }}>
-              <BoxButton
-                onClick={replayGame}
-                title="restart"
                 style={{ width: 180, fontSize: 24 }}
               />
             </div>

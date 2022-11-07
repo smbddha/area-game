@@ -2,7 +2,7 @@ import { FunctionalComponent, h, Fragment } from "preact";
 import { useRef, useEffect, useState } from "preact/hooks";
 import { colors } from "src/style";
 
-import { IShape, IShapeGroup, clamp } from "src/utils";
+import { IShapeGroup, clamp } from "src/utils";
 import { randomColor } from "src/utils/colors";
 
 type Props = {
@@ -14,16 +14,17 @@ type Props = {
 // TODO calculate these scales
 const scaleLowerBound = 0.2;
 const scaleUpperBound = 2.0;
-const scaleRange = scaleUpperBound - scaleLowerBound;
+// const scaleRange = scaleUpperBound - scaleLowerBound;
 
-// const DEBUG = true; // displays the areas over the shapes
-const DEBUG = false;
+const DEBUG = true; // displays the areas over the shapes
+// const DEBUG = false;
 
 const Shape: FunctionalComponent<Props> = (props: Props) => {
   const { shape } = props;
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>(null);
+  const [val, setVal] = useState<number>(50);
   const [scale, setScale] = useState<number>(1.0);
   const [scaleRange, setScaleRange] = useState<number>(1.9);
   const [color, _] = useState(randomColor());
@@ -41,7 +42,11 @@ const Shape: FunctionalComponent<Props> = (props: Props) => {
     const context = canvas.getContext("2d");
     if (!context) return;
 
-    setScaleRange(shape.getMaxScale(canvas.width, canvas.height));
+    let ms = shape.getMaxScale(canvas.width, canvas.height);
+    console.log(ms, ms - ms / 5);
+
+    setScaleRange(ms - ms / 5);
+
     setCtx(context);
   }, []);
 
@@ -82,17 +87,33 @@ const Shape: FunctionalComponent<Props> = (props: Props) => {
     if (!shape) return;
 
     let val = e.target.valueAsNumber;
-    let s = scaleLowerBound + ((val - 1) / 99) * scaleRange;
+    let s = scaleLowerBound + (val / 100) * (scaleRange - scaleLowerBound);
 
+    setVal(val);
     setScale(s);
   };
+
+  useEffect(() => {
+    setVal(
+      1 +
+        Math.floor(
+          99 * ((scale - scaleLowerBound) / (scaleRange - scaleLowerBound))
+        )
+    );
+  }, [scaleRange]);
 
   const handleWheel = (e: WheelEvent) => {
     let d = e.deltaY;
 
+    setVal(
+      1 +
+        Math.floor(
+          99 * ((scale - scaleLowerBound) / (scaleRange - scaleLowerBound))
+        )
+    );
     setScale((s) => {
       let ns = s + d / 3500;
-      return clamp(ns, scaleLowerBound, scaleUpperBound);
+      return clamp(ns, scaleLowerBound, scaleRange);
     });
   };
 
@@ -106,7 +127,7 @@ const Shape: FunctionalComponent<Props> = (props: Props) => {
             type="range"
             min="1"
             max="100"
-            value={1 + Math.ceil(99 * ((scale - scaleLowerBound) / scaleRange))}
+            value={val}
             class="slider"
             id="myRange"
             onInput={handleInput}

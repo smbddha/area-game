@@ -1,6 +1,6 @@
-import { FunctionalComponent, h, Fragment } from "preact";
-import { useEffect } from "preact/hooks";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { FunctionalComponent, h, Fragment, JSX } from "preact";
+import { useEffect, useRef, useCallback, useState } from "preact/hooks";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { GameTypeEnum } from "src/utils";
 import { fetchLeaderboard } from "src/api";
@@ -12,12 +12,11 @@ type Props = {
 
 const Leaderboard: FunctionalComponent<Props> = (props: Props) => {
   const { gameType, scoreId } = props;
-
-  // const queryClient = useQueryClient();
+  const [username, setUsername] = useState<string>("");
 
   const { isLoading, isError, data, error } = useQuery({
-    queryFn: fetchLeaderboard,
-    queryKey: ["scores"],
+    queryKey: ["scores", gameType],
+    queryFn: () => fetchLeaderboard(gameType),
   });
 
   const mutation = useMutation({
@@ -28,9 +27,46 @@ const Leaderboard: FunctionalComponent<Props> = (props: Props) => {
     },
   });
 
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
+  const _debounce = (f: () => void) => {
+    let timer: ReturnType<typeof setTimeout> | null;
+    return function (...args: []) {
+      //@ts-ignore
+      const context: any = this;
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(() => {
+        timer = null;
+        f.apply(context, args);
+      }, 2000);
+    };
+  };
+
+  const updateUsername = (name: string) => {
+    mutation.mutate(name);
+  };
+
+  //@ts-ignore
+  const debounceInput = useCallback(_debounce(updateUsername), []);
+
+  const handleEdit = (e: JSX.TargetedEvent<HTMLInputElement, Event>) => {
+    if (!e.target) return;
+
+    setUsername(e.target.value);
+    debounceInput(e.target.value);
+  };
+
+  const renderEditUsername = () => {
+    return (
+      <input
+        type="text"
+        id="username"
+        name="username"
+        placeholder="enter your name"
+        value={username}
+        onChange={handleEdit}
+        style={{ textAlign: "center" }}
+      />
+    );
+  };
 
   return (
     <>
@@ -46,20 +82,24 @@ const Leaderboard: FunctionalComponent<Props> = (props: Props) => {
           Leaderboard
         </div>
         {isLoading ? "loading..." : null}
-        {isError ? "error !" : null}
+        {isError ? "error fetching leaderboard" : null}
         {data
           ? data.data.data.map((it: any, i: number) => {
               return (
                 <div style={{ ...styles.leaderboardRow }}>
-                  {it.id === scoreId ?? "!"}
+                  <div style={{ minWidth: "2rem", textAlign: "center" }}>
+                    {it.id === scoreId && "!"}
+                  </div>
                   <div style={{ minWidth: "2rem" }}>{i + 1}.</div>{" "}
                   <div style={{ flex: "1", textAlign: "center" }}>
-                    {it.username}
+                    {it.id === scoreId ? renderEditUsername() : it.username}
                   </div>
                   <div style={{ minWidth: "4rem", textAlign: "right" }}>
                     {it.score}
                   </div>
-                  {it.id === scoreId ?? "!"}
+                  <div style={{ minWidth: "2rem", textAlign: "center" }}>
+                    {it.id === scoreId && "!"}
+                  </div>
                 </div>
               );
             })

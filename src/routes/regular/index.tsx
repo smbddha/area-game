@@ -81,6 +81,12 @@ const RegularGame: FunctionalComponent = () => {
     }
   }, [gameState]);
 
+		// useEffect(() => {
+		// 		if (mutation.isSuccess)	 {
+		// 				console.log("MUTATION", mutation);
+		// 		}
+		// }, [mutation])
+
   const closePreModal = () => {
     setGameState(GameStateEnum.Playing);
     start();
@@ -186,12 +192,12 @@ const RegularGame: FunctionalComponent = () => {
           </div>
           {mutation.isSuccess && (
             <Leaderboard
-              scoreId={mutation.data.data.id}
+              scoreId={mutation.data.data.data.id}
               gameType={GameTypeEnum.Regular}
             />
           )}
 
-          <div>
+          <div style={{...styles.rowContainer, justifyContent: "space-between"}}>
             {/* TODO style the exit button better (red background) */}
             <div style={{ alignSelf: "flex-start" }}>
               <BoxButton
