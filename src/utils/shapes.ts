@@ -69,7 +69,7 @@ export class ShapeGroup implements IShapeGroup {
       .map((s) => w / s.getWidthDim())
       .reduce((a, b) => Math.min(a, b));
 
-    console.log("SCALES", hscale, wscale);
+    // console.log("SCALES", hscale, wscale);
     return Math.min(hscale, wscale);
   }
 

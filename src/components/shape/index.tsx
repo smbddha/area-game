@@ -43,7 +43,6 @@ const Shape: FunctionalComponent<Props> = (props: Props) => {
     if (!context) return;
 
     let ms = shape.getMaxScale(canvas.width, canvas.height);
-    console.log(ms, ms - ms / 5);
 
     setScaleRange(ms - ms / 5);
 

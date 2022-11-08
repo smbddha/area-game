@@ -29,7 +29,7 @@ export const useGame = (gameType: GameTypeEnum) => {
   // TODO change for different gametypes
   const numLevels = gameType === GameTypeEnum.Regular ? 10 : Infinity;
 
-  useEffect(() => console.log("GAMESTATE", gameState), [gameState]);
+  // useEffect(() => console.log("GAMESTATE", gameState), [gameState]);
 
   const scoreLevel = () => {
     let diff = Math.abs(shape1.getArea() - shape2.getArea());
@@ -76,12 +76,12 @@ export const useGame = (gameType: GameTypeEnum) => {
 
     // actually do the delay here
 
-    console.log("NEXT LEVEL");
+    // console.log("NEXT LEVEL");
     if (currentLevel >= numLevels) {
       setGameState(GameStateEnum.Post);
       actions.reset();
       actions.pause();
-      console.log("DONE");
+      // console.log("DONE");
       return;
     }
     setCurrentLevel((n) => n + 1);
@@ -106,7 +106,7 @@ export const useGame = (gameType: GameTypeEnum) => {
         setGameState(GameStateEnum.Post);
       }
 
-      console.log("AHHHHHHH");
+      // console.log("AHHHHHHH");
       goNextLevel();
     }
 
