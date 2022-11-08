@@ -13,8 +13,7 @@ import { createScore } from "src/api";
 import { useGame } from "src/utils/hooks/useGame";
 import { GameTypeEnum } from "src/utils/types";
 import { colors } from "src/style";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
+import { useMutation } from "@tanstack/react-query";
 import Leaderboard from "src/components/leaderboard";
 
 enum GameStateEnum {
@@ -40,7 +39,9 @@ const RegularGame: FunctionalComponent = () => {
     return Math.ceil((tr - 1) / 1000);
   };
 
+  // const mutation = useMutation("score", createScore);
   const mutation = useMutation({
+    // mutationKey: ["score"],
     mutationFn: createScore,
   });
 
@@ -81,11 +82,11 @@ const RegularGame: FunctionalComponent = () => {
     }
   }, [gameState]);
 
-		// useEffect(() => {
-		// 		if (mutation.isSuccess)	 {
-		// 				console.log("MUTATION", mutation);
-		// 		}
-		// }, [mutation])
+  // useEffect(() => {
+  // 		if (mutation.isSuccess)	 {
+  // 				console.log("MUTATION", mutation);
+  // 		}
+  // }, [mutation])
 
   const closePreModal = () => {
     setGameState(GameStateEnum.Playing);
@@ -197,7 +198,9 @@ const RegularGame: FunctionalComponent = () => {
             />
           )}
 
-          <div style={{...styles.rowContainer, justifyContent: "space-between"}}>
+          <div
+            style={{ ...styles.rowContainer, justifyContent: "space-between" }}
+          >
             {/* TODO style the exit button better (red background) */}
             <div style={{ alignSelf: "flex-start" }}>
               <BoxButton

@@ -3,7 +3,7 @@ import { useEffect, useRef, useCallback, useState } from "preact/hooks";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { GameTypeEnum } from "src/utils";
-import { fetchLeaderboard } from "src/api";
+import { fetchLeaderboard, setUsername } from "src/api";
 
 type Props = {
   gameType: GameTypeEnum;
@@ -12,7 +12,7 @@ type Props = {
 
 const Leaderboard: FunctionalComponent<Props> = (props: Props) => {
   const { gameType, scoreId } = props;
-  const [username, setUsername] = useState<string>("");
+  const [username, setLocalUsername] = useState<string>("");
 
   const { isLoading, isError, data, error } = useQuery({
     queryKey: ["scores", gameType],
@@ -20,9 +20,14 @@ const Leaderboard: FunctionalComponent<Props> = (props: Props) => {
   });
 
   const mutation = useMutation({
-    mutationKey: ["username"],
-    mutationFn: () => setUsername(username),
+    mutationFn: () => setUsername(username, scoreId),
   });
+
+  // const mutation = useMutation(["username"], () => []);
+  // const mutation = useMutation({
+  //   mutationKey: "username",
+  //   mutationFn: () => setUsername(username),
+  // });
 
   const _debounce = (f: () => void) => {
     let timer: ReturnType<typeof setTimeout> | null;
@@ -47,7 +52,9 @@ const Leaderboard: FunctionalComponent<Props> = (props: Props) => {
   const handleEdit = (e: JSX.TargetedEvent<HTMLInputElement, Event>) => {
     if (!e.target) return;
 
-    setUsername(e.target.value);
+    //@ts-ignore
+    setLocalUsername(e.target.value);
+    //@ts-ignore
     debounceInput(e.target.value);
   };
 
