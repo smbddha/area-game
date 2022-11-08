@@ -16,8 +16,8 @@ const scaleLowerBound = 0.2;
 const scaleUpperBound = 2.0;
 // const scaleRange = scaleUpperBound - scaleLowerBound;
 
-const DEBUG = true; // displays the areas over the shapes
-// const DEBUG = false;
+// const DEBUG = true; // displays the areas over the shapes
+const DEBUG = false;
 
 const Shape: FunctionalComponent<Props> = (props: Props) => {
   const { shape } = props;
