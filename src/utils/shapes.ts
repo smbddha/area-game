@@ -12,7 +12,8 @@ export interface IShape {
   getWidthDim: () => number;
 }
 
-export interface IShapeGroup extends Omit<IShape, "getHeightDim"> {
+export interface IShapeGroup
+  extends Omit<IShape, "getHeightDim" | "getWidthDim"> {
   shapes: IShape[];
   //draw: (ctx: CanvasRenderingContext2D, x?: number, y?: number) => void;
   getArea: () => number;

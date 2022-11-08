@@ -20,11 +20,8 @@ const Leaderboard: FunctionalComponent<Props> = (props: Props) => {
   });
 
   const mutation = useMutation({
-    mutationFn: (username: string) => {
-      return axios.put(`http://127.0.0.1:3000/scores/${scoreId}`, {
-        username,
-      });
-    },
+    mutationKey: ["username"],
+    mutationFn: () => setUsername(username),
   });
 
   const _debounce = (f: () => void) => {
@@ -41,7 +38,7 @@ const Leaderboard: FunctionalComponent<Props> = (props: Props) => {
   };
 
   const updateUsername = (name: string) => {
-    mutation.mutate(name);
+    mutation.mutate();
   };
 
   //@ts-ignore
