@@ -16,6 +16,10 @@ html, body {
 	box-sizing: border-box;
 }
 
+button {
+    cursor: pointer;
+}
+
 #preact_root {
 	height: 100%;
 }
