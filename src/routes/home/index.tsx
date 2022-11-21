@@ -19,12 +19,6 @@ const Home: FunctionalComponent = () => {
   return (
     <>
       <QueryClientProvider client={queryClient}>
-        {/* <motion.div
-        className="box"
-        initial={{ scale: 0.5 }}
-        animate={{ scale: 1.5 }}
-        transition={{ repeat: Infinity, repeatType: "reverse", duration: 8 }}
-      />*/}
         <div style={styles.mainContainer}>
           <div>
             <h1 style={{ fontSize: 46 }}>area game</h1>

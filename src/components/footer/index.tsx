@@ -4,7 +4,7 @@ import { colors } from "src/style";
 const Footer = () => {
   return (
     <div style={{ ...styles.footerStyle }}>
-      made with <a>little purpose</a>
+      made with <a href="https://littlepurpose.dev">little purpose</a>
     </div>
   );
 };
