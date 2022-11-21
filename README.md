@@ -1,6 +1,11 @@
 # area-game
 
-## CLI Commands
+A small game wher eyou try to match the areas of two sets of shapes!
+
+## Bugs?
+If you find any bugs while playing please open an issue here. (feature requests are welcome as well)
+
+## running locally 
 *   `npm install`: Installs dependencies
 
 *   `npm run dev`: Run a development, HMR server
@@ -11,9 +16,4 @@
 
 *   `npm run lint`: Pass TypeScript files using ESLint
 
-*   `npm run test`: Run Jest and Enzyme with
-    [`enzyme-adapter-preact-pure`](https://github.com/preactjs/enzyme-adapter-preact-pure) for
-    your tests
 
-
-For detailed explanation on how things work, checkout the [CLI Readme](https://github.com/developit/preact-cli/blob/master/README.md).
