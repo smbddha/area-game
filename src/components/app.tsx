@@ -2,7 +2,6 @@ import { FunctionalComponent, h } from "preact";
 import { Route, Router } from "preact-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import ReactGA from "react-ga";
-ReactGA.initialize(`${process.env.GOOGLE_TAG_ID}`);
 
 import RegularGame from "src/routes/regular";
 import PracticeGame from "src/routes/practice";
@@ -13,6 +12,8 @@ import NotFoundPage from "src/routes/notfound";
 import Footer from "./footer";
 
 import { colors } from "src/style";
+
+ReactGA.initialize(`${process.env.GOOGLE_TAG_ID}`);
 
 const queryClient = new QueryClient();
 

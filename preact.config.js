@@ -12,6 +12,7 @@ export default (config, env, helpers) => {
   config.plugins.push(
     new helpers.webpack.DefinePlugin({
       "process.env.API_URL": JSON.stringify(process.env.API_URL),
+      "process.env.GOOGLE_TAG_ID": JSON.stringify(process.env.GOOGLE_TAG_ID),
     })
   );
 };
