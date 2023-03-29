@@ -1,7 +1,7 @@
 import { FunctionalComponent, h } from "preact";
 import { Route, Router } from "preact-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import ReactGA from "react-ga";
+import ReactGA from "react-ga4";
 
 import RegularGame from "src/routes/regular";
 import PracticeGame from "src/routes/practice";
